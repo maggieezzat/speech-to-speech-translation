@@ -1,0 +1,7 @@
+s2s.log
+server.crt
+server.key
+flask_session/*
+myenv/*
+__pycache__/*
+.uwsgi_plugins_builder/*
