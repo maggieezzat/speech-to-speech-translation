@@ -388,7 +388,7 @@ def upload():
             out_female_file = session['out_female_file'],
             out_male_file = session['out_male_file'])
 """
-
+@app.route("/")
 def welcome():
 
     if 'in_file' in session.keys():
