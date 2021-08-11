@@ -435,12 +435,12 @@ def upload():
         print("PREP Time: " + str(prep_time))
         
         start = time.time()
-        url = 'http://espnetdecoding.eastus.cloudapp.azure.com:6000'
+        url = 'http://41.179.247.131/:6000'
         files = {'file': open(os.path.join(save_dir, filename), 'rb')}
 
-        #######r = rq.post(url, files=files)
-        #######asr_out = json.loads(r.text)['transcript']
-        asr_out='مرحبا فى مركز الابتكار'
+        r = rq.post(url, files=files)
+        asr_out = json.loads(r.text)['transcript']
+        #asr_out='مرحبا فى مركز الابتكار'
 
         with open(os.path.join(output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
             f.write(asr_out + '\n')
