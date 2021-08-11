@@ -85,20 +85,6 @@ canvas {
   margin-bottom: 1rem;
 }
 
-/* #asr {
-  font-size: 1rem;
-  padding: 1rem;
-  width: calc(40% - 0.25rem);
-
-}
-
-#s2s {
-  font-size: 1rem;
-  padding: 1rem;
-  width: calc(40% - 0.25rem);
-
-} */
-
 #buttons {
   /* display: flex;
   
@@ -110,16 +96,12 @@ canvas {
   margin-right: auto; */
 }
 
-
-
 #buttons button {
   font-size: 1rem;
   padding: 1rem;
   width: calc(33% - 0.25rem);
 
 }
-
-
 
 button {
   font-size: 1rem;
@@ -173,13 +155,6 @@ button:active:enabled {
 
 .buttons-list {
   width: 50%;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.buttons-choice-list {
-  width: 80%;
   display: block;
   margin-left: auto;
   margin-right: auto;
