@@ -137,8 +137,7 @@ def upload():
         print("PREP Time: " + str(prep_time))
         
         start = time.time()
-        url = 'http://espnetdecoding.eastus.cloudapp.azure.com:6000'
-        #url ='bla bla blo'
+        url = 'http://41.179.247.131:6000/'
         files = {'file': open(os.path.join(save_dir, filename), 'rb')}
 
         r = rq.post(url, files=files)
@@ -183,9 +182,10 @@ def upload():
             os.makedirs(os.path.join(output_dir, 'MT'))
 
             #CHINESE
-            url = 'http://52.168.2.102:5000/translate'
+            url = 'http://41.179.247.131:9704/translate'
+            #'Content-Type: application/json
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"zh"}
-            file_response = rq.post(url, headers = {'content-type': "application/json"}, json=payload)
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ch = file_response.json()['output']
             session['trans_ch'] = trans_ch
 
@@ -194,9 +194,9 @@ def upload():
             
             
             #ENGLISH
-            url = 'http://52.168.2.102:5000/translate'
+            url = 'http://41.179.247.131:9704/translate'
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"en"}
-            file_response = rq.post(url, headers = {'content-type': "application/json"}, json=payload)
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_en = file_response.json()['output']
             #trans_en = 'Hi! This feature is under construction.'
             session['trans_en'] = trans_en
@@ -205,9 +205,9 @@ def upload():
                 f.write(trans_en + '\n')
             
             #FRENCH
-            url = 'http://52.168.2.102:5000/translate'
+            url = 'http://41.179.247.131:9704/translate'
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"fr"}
-            file_response = rq.post(url, headers = {'content-type': "application/json"}, json=payload)
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_fr = file_response.json()['output']
             #trans_fr = " Hi! Cette fonctionnalité en sous construction."
             session['trans_fr'] = trans_fr
@@ -217,9 +217,9 @@ def upload():
 
             ###################################### 3. ARABIC TRANSLATION ######################################
             #CH/AR
-            url = 'http://52.168.2.102:5000/translate'
+            url = 'http://41.179.247.131:9704/translate'
             payload = {"text": trans_ch, "source":"zh", "target":"ar"}
-            file_response = rq.post(url, headers = {'content-type': "application/json"}, json=payload)
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ch_ar = file_response.json()['output']
             session['trans_ch_ar'] = trans_ch_ar
 
@@ -227,9 +227,9 @@ def upload():
                 f.write(trans_ch_ar + '\n')
             
             #EN/AR
-            url = 'http://52.168.2.102:5000/translate'
+            url = 'http://41.179.247.131:9704/translate'
             payload = {"text": trans_en, "source":"en", "target":"ar"}
-            file_response = rq.post(url, headers = {'content-type': "application/json"}, json=payload)
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_en_ar = file_response.json()['output']
             #trans_en_ar = 'مرحبا! هذه الخاصية تحت الانشاء'
             session['trans_en_ar'] = trans_en_ar
@@ -238,9 +238,9 @@ def upload():
                 f.write(trans_en_ar + '\n')
 
             #FR/AR
-            url = 'http://52.168.2.102:5000/translate'
+            url = 'http://41.179.247.131:9704/translate'
             payload = {"text": trans_fr, "source":"fr", "target":"ar"}
-            file_response = rq.post(url, headers = {'content-type': "application/json"}, json=payload)
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_fr_ar = file_response.json()['output']
             #trans_fr_ar = 'مرحبا! هذه الخاصية تحت الانشاء'
             session['trans_fr_ar'] = trans_fr_ar
@@ -313,11 +313,10 @@ def upload():
     ###################################### 5. TEXT TO SPEECH ######################################
     try:
         start = time.time()
-        url = 'http://40.91.64.226:5000/'
+        url = 'http://41.179.247.131:5000/'
         diac_sent = 'ي ' + diac_sent
         params = {'txt' : diac_sent, 'gender' : '0'}
         file_response = rq.post(url, params=params)
-
         out_male = 'out_male_{}.wav'.format(str(int(time.time())))
         out_female = 'out_female_{}.wav'.format(str(int(time.time())))
 
@@ -330,7 +329,7 @@ def upload():
         
         session['out_female_file'] = out_female
 
-        url = 'http://40.91.64.226:5000/'
+        url = 'http://41.179.247.131:5000/'
         params = {'txt' : diac_sent, 'gender' : '1'}
         file_response = rq.post(url, params=params)
         if os.path.exists(os.path.join(save_dir, out_male)):
