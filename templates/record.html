@@ -19,9 +19,6 @@
       <div class='jumbotron pt-8' style="margin-top:0; padding: 0.3em;">
             <div class="container" style="margin-top:0; padding: 0.3em;">
                 <h2 class="display-8" style="color: rgb(81, 17, 141);">Speech To Speech Translation</h2>
-                <!-- <p class="lead" style="color: rgb(105, 60, 148);">Speech To Speech Translation</p> -->
-                <!-- <p class="lead" style="color: rgb(105, 60, 148);">Press Record to start recording, then Stop and Upload</p>
-                <hr class="my-4"> -->
                 
                 <section class="main-controls">
               
@@ -83,8 +80,6 @@
                 <div class="d-flex justify-content-center" id='spinner-div'>
                 </div>
           
-              <!-- </br> -->
-          
               <div id="error-logs">
                 {% if error_message %} 
                   <div class="alert alert-danger" role="alert">{{ error_message }}</div>
@@ -101,7 +96,7 @@
                         </div>
                       </div>
                     {% endif %}
-                    <!-- </br> -->
+
                     {% if trans_ch %}
                     <div class="card">
                       <h5 class="card-header"> Translation I </h5>
@@ -127,7 +122,7 @@
                       </ul>
                     </div>
                     {% endif %}  
-                    <!-- </br> -->
+
                     {% if trans_en_ar %}
                     <div class="card">
                       <h5 class="card-header"> Translation II</h5>
@@ -156,15 +151,10 @@
                         </li>
                     </div>
                     {% endif %}
-                    <!-- </br> -->
+                  <!--************************************************************-->
                     {% if diac_sent %}
                     <div class="card">
                       <h5 class="card-header"> 
-                        <!-- {% if trans_ch_ar %}
-                        4. 
-                        {% else %}
-                        2. 
-                        {% endif %} -->
                         Diacritization</h5>
                       <div class="card-body">
                         <p class="card-text" style="text-align: center;">{{ diac_sent }}</p>
@@ -176,15 +166,8 @@
                     {% if out_female_file %}
                       <div class="card">
                         <h5 class="card-header">
-                          <!-- {% if trans_ch_ar %}
-                          5. 
-                          {% else %}
-                          3. 
-                          {% endif %}  -->
                           Text To Speech</h5>
                         <div class="card-body"> 
-                          <!-- <div class="row">
-                            <div class="col"> -->
                               <section class="sound-clips" id='output-audio'>
                                 <article class="clip">
                                   <span class="badge badge-pill badge-primary" style="background-color:blueviolet;">Female</span>
@@ -192,20 +175,12 @@
                                   </audio>
                                 </article>
                   
-                            <!-- </div>
-                            <div class="col"> -->
                               <article class="clip">
                                 <span class="badge badge-pill badge-primary">Male</span>
                                 <audio controls src="static/{{ out_male_file }}">      
                                 </audio>
                               </article>
                               </section>
-                  
-                            <!-- </div>
-                          </div> -->
-                          
-                  
-                            
                         </div>
                       </div>
                     {% endif %}
