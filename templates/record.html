@@ -119,6 +119,13 @@
                           <h6 class="card-subtitle mb-2 text-muted">ar/zh</h6>
                             {{ trans_ch }}
                         </li>
+                        <!--***************************************************************-->
+                        <li class="list-group-item">
+                          <h6 class="card-subtitle mb-2 text-muted">ar/ru</h6>
+                          {% if trans_ru %}
+                              {{ trans_ru }}
+                          {% endif %}
+                        </li>
                       </ul>
                     </div>
                     {% endif %}  
@@ -147,6 +154,15 @@
                           <h6 class="card-subtitle mb-2 text-muted">zh/ar</h6>
                           <div style="text-align: center;">
                             {{ trans_ch_ar }}
+                          </div>
+                        </li>
+
+                        <li class="list-group-item">
+                          <h6 class="card-subtitle mb-2 text-muted">ru/ar</h6>
+                          <div style="text-align: center;">
+                            {% if trans_ru_ar %}
+                              {{ trans_ru_ar }}
+                          {% endif %}
                           </div>
                         </li>
                     </div>

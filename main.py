@@ -78,9 +78,11 @@ def welcome():
                 trans_ch = session['trans_ch'],
                 trans_en = session['trans_en'],
                 trans_fr = session['trans_fr'],
+                trans_ru = session['trans_ru'],
                 trans_ch_ar = session['trans_ch_ar'],
                 trans_en_ar = session['trans_en_ar'],
                 trans_fr_ar = session['trans_fr_ar'],
+                trans_ru_ar = session['trans_ru_ar'],
                 diac_sent=session['diac_sent'],
                 out_female_file = session['out_female_file'],
                 out_male_file = session['out_male_file'])
@@ -126,24 +128,23 @@ def upload():
     filename = 'input_file.wav'
     audio_data = request.data
 
+    save_dir = 'static'
     output_dir = str(int(time.time()))
 
-    os.makedirs(output_dir)
-    os.makedirs(os.path.join(output_dir, 'ASR'))
-    
-    session['in_file'] = filename
-
-    save_dir = 'static'
+    os.makedirs('static/' + output_dir)
+    os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
 
     ###################################### 1. SPEECH RECOGNITION ######################################
     try:
         start = time.time()
         
-        with open(os.path.join(save_dir, filename), 'wb') as f:
+        #with open(os.path.join(save_dir, output_dir, filename), 'wb') as f:
+        #    f.write(audio_data)
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
             f.write(audio_data)
 
-        with open(os.path.join(output_dir, 'ASR', filename), 'wb') as f:
-            f.write(audio_data)
+        session['in_file'] = os.path.join(save_dir, output_dir, 'ASR', filename)
         
         end = time.time()
         prep_time = end - start
@@ -151,12 +152,12 @@ def upload():
         
         start = time.time()
         url = 'http://41.179.247.131:6000/'
-        files = {'file': open(os.path.join(save_dir, filename), 'rb')}
+        files = {'file': open(os.path.join(save_dir,  output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
         asr_out = json.loads(r.text)['transcript']
 
-        with open(os.path.join(output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
+        with open(os.path.join(save_dir, output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
             f.write(asr_out + '\n')
         
         session['asr_out'] = asr_out.replace('<صخث>', '***')
@@ -195,7 +196,7 @@ def upload():
             trans_ch = file_response.json()['output']
             session['trans_ch'] = trans_ch
 
-            with open(os.path.join(output_dir, 'MT', 'trans_chinese.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_chinese.txt'), 'w') as f:
                 f.write(trans_ch + '\n')
             
             
@@ -206,7 +207,7 @@ def upload():
             trans_en = file_response.json()['output']
             session['trans_en'] = trans_en
 
-            with open(os.path.join(output_dir, 'MT', 'trans_english.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_english.txt'), 'w') as f:
                 f.write(trans_en + '\n')
             
             #FRENCH
@@ -216,8 +217,18 @@ def upload():
             trans_fr = file_response.json()['output']
             session['trans_fr'] = trans_fr
 
-            with open(os.path.join(output_dir, 'MT', 'trans_french.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_french.txt'), 'w') as f:
                 f.write(trans_fr + '\n')
+            
+            #RUSSIAN
+            url = 'http://41.179.247.131:9704/translate'
+            payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"ru"}
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            trans_ru = file_response.json()['output']
+            session['trans_ru'] = trans_ru
+
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_russian.txt'), 'w') as f:
+                f.write(trans_ru + '\n')
 
             ###################################### 3. ARABIC TRANSLATION ######################################
             #CH/AR
@@ -227,7 +238,7 @@ def upload():
             trans_ch_ar = file_response.json()['output']
             session['trans_ch_ar'] = trans_ch_ar
 
-            with open(os.path.join(output_dir, 'MT', 'trans_ch_arabic.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ch_arabic.txt'), 'w') as f:
                 f.write(trans_ch_ar + '\n')
             
             #EN/AR
@@ -237,7 +248,7 @@ def upload():
             trans_en_ar = file_response.json()['output']
             session['trans_en_ar'] = trans_en_ar
 
-            with open(os.path.join(output_dir, 'MT', 'trans_en_arabic.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_en_arabic.txt'), 'w') as f:
                 f.write(trans_en_ar + '\n')
 
             #FR/AR
@@ -247,8 +258,18 @@ def upload():
             trans_fr_ar = file_response.json()['output']
             session['trans_fr_ar'] = trans_fr_ar
 
-            with open(os.path.join(output_dir, 'MT', 'trans_fr_arabic.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_fr_arabic.txt'), 'w') as f:
                 f.write(trans_fr_ar + '\n')
+            
+            #RU/AR
+            url = 'http://41.179.247.131:9704/translate'
+            payload = {"text": trans_fr, "source":"ru", "target":"ar"}
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            trans_ru_ar = file_response.json()['output']
+            session['trans_ru_ar'] = trans_ru_ar
+
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ru_arabic.txt'), 'w') as f:
+                f.write(trans_ru_ar + '\n')
 
         except:
             print("ERROR FETCHING MT OUTPUT")
@@ -257,9 +278,11 @@ def upload():
             session.pop('trans_ch', None)
             session.pop('trans_en', None)
             session.pop('trans_fr', None)
+            session.pop('trans_ru', None)
             session.pop('trans_ch_ar', None)
             session.pop('trans_en_ar', None)
             session.pop('trans_fr_ar', None)
+            session.pop('trans_ru_ar', None)
             session.pop('diac_sent', None)
             session.pop('out_female_file', None)
             session.pop('out_male_file', None)
@@ -287,9 +310,9 @@ def upload():
         diac_sent = complete_tashkeel(diac_sent)
         session['diac_sent'] = diac_sent
 
-        os.makedirs(os.path.join(output_dir, 'TTS'))
+        os.makedirs(os.path.join(save_dir, output_dir, 'TTS'))
 
-        with open(os.path.join(output_dir, 'TTS', 'diacritized_sent.txt'), 'w') as f:
+        with open(os.path.join(save_dir, output_dir, 'TTS', 'diacritized_sent.txt'), 'w') as f:
                 f.write(diac_sent + '\n')
 
         end = time.time()
@@ -321,26 +344,26 @@ def upload():
         out_male = 'out_male_{}.wav'.format(str(int(time.time())))
         out_female = 'out_female_{}.wav'.format(str(int(time.time())))
 
-        if os.path.exists(os.path.join(save_dir, out_female)):
-            os.remove(os.path.join(save_dir, out_female))
-        with open(os.path.join(save_dir, out_female), 'wb') as f:
+        #if os.path.exists(os.path.join(save_dir, output_dir, 'TTS' ,out_female)):
+        #    os.remove(os.path.join(save_dir, out_female))
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_female), 'wb') as f:
             f.write(file_response.content)
-        with open(os.path.join(output_dir, 'TTS', 'out_female.wav'), 'wb') as f:
-            f.write(file_response.content)
+        #with open(os.path.join(output_dir, 'TTS', 'out_female.wav'), 'wb') as f:
+        #    f.write(file_response.content)
         
-        session['out_female_file'] = out_female
+        session['out_female_file'] = os.path.join(save_dir, output_dir, 'TTS', out_female)
 
         url = 'http://41.179.247.131:5000/'
         params = {'txt' : diac_sent, 'gender' : '1'}
         file_response = rq.post(url, params=params)
-        if os.path.exists(os.path.join(save_dir, out_male)):
-            os.remove(os.path.join(save_dir, out_male))
-        with open(os.path.join(save_dir, out_male), 'wb') as f:
+        #if os.path.exists(os.path.join(save_dir, out_male)):
+        #    os.remove(os.path.join(save_dir, out_male))
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
             f.write(file_response.content)
-        with open(os.path.join(output_dir, 'TTS', 'out_male.wav'), 'wb') as f:
-            f.write(file_response.content)
+        #with open(os.path.join(output_dir, 'TTS', 'out_male.wav'), 'wb') as f:
+        #    f.write(file_response.content)
         
-        session['out_male_file'] = out_male
+        session['out_male_file'] = os.path.join(save_dir, output_dir, 'TTS', out_male)
         
         end = time.time()
         tts_time = end - start
@@ -370,8 +393,11 @@ def upload():
             trans_ch = session['trans_ch'],
             trans_en = session['trans_en'],
             trans_fr = session['trans_fr'],
-            trans_en_ar = session['trans_en_ar'],
+            trans_ru = session['trans_ru'],
+            trans_en_ar = session['trans_ch_ar'],
+            trans_fr_ar = session['trans_en_ar'],
             trans_fr_ar = session['trans_fr_ar'],
+            trans_fr_ar = session['trans_ru_ar'],
             diac_sent = session['diac_sent'],
             out_female_file = session['out_female_file'],
             out_male_file = session['out_male_file'])
@@ -393,24 +419,23 @@ def upload_asr():
     filename = 'input_file.wav'
     audio_data = request.data
 
+    save_dir = 'static'
     output_dir = str(int(time.time()))
 
-    os.makedirs(output_dir)
-    os.makedirs(os.path.join(output_dir, 'ASR'))
-    
-    session['in_file'] = filename
-
-    save_dir = 'static'
+    os.makedirs('static/' + output_dir)
+    os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
 
     ###################################### 1. SPEECH RECOGNITION ######################################
     try:
         start = time.time()
         
-        with open(os.path.join(save_dir, filename), 'wb') as f:
+        #with open(os.path.join(save_dir, filename), 'wb') as f:
+        #    f.write(audio_data)
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
             f.write(audio_data)
 
-        with open(os.path.join(output_dir, 'ASR', filename), 'wb') as f:
-            f.write(audio_data)
+        session['in_file'] = os.path.join(save_dir, output_dir, 'ASR', filename)
         
         end = time.time()
         prep_time = end - start
@@ -418,12 +443,12 @@ def upload_asr():
         
         start = time.time()
         url = 'http://41.179.247.131:6000/'
-        files = {'file': open(os.path.join(save_dir, filename), 'rb')}
+        files = {'file': open(os.path.join(save_dir, output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
         asr_out = json.loads(r.text)['transcript']
 
-        with open(os.path.join(output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
+        with open(os.path.join(save_dir, output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
             f.write(asr_out + '\n')
         
         session['asr_out'] = asr_out.replace('<صخث>', '***')
