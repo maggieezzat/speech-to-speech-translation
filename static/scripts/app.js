@@ -262,7 +262,8 @@ function uploadCip(uploadText) {
       console.log(blob)
       var ajaxRequest = new XMLHttpRequest();
       var uploadUrl = '/upload';
-      if (uploadText == 'decode'){
+      console.log(uploadText)
+      if (uploadText == 'Decode'){
         uploadUrl = '/upload_asr'
       }
       
