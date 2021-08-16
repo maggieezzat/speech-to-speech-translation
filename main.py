@@ -78,9 +78,11 @@ def welcome():
                 trans_ch = session['trans_ch'],
                 trans_en = session['trans_en'],
                 trans_fr = session['trans_fr'],
+                trans_ru = session['trans_ru'],
                 trans_ch_ar = session['trans_ch_ar'],
                 trans_en_ar = session['trans_en_ar'],
                 trans_fr_ar = session['trans_fr_ar'],
+                trans_ru_ar = session['trans_ru_ar'],
                 diac_sent=session['diac_sent'],
                 out_female_file = session['out_female_file'],
                 out_male_file = session['out_male_file'])
@@ -218,6 +220,16 @@ def upload():
 
             with open(os.path.join(output_dir, 'MT', 'trans_french.txt'), 'w') as f:
                 f.write(trans_fr + '\n')
+            
+            #RUSSIAN
+            url = 'http://41.179.247.131:9704/translate'
+            payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"ru"}
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            trans_ru = file_response.json()['output']
+            session['trans_ru'] = trans_ru
+
+            with open(os.path.join(output_dir, 'MT', 'trans_russian.txt'), 'w') as f:
+                f.write(trans_ru + '\n')
 
             ###################################### 3. ARABIC TRANSLATION ######################################
             #CH/AR
@@ -249,6 +261,16 @@ def upload():
 
             with open(os.path.join(output_dir, 'MT', 'trans_fr_arabic.txt'), 'w') as f:
                 f.write(trans_fr_ar + '\n')
+            
+            #RU/AR
+            url = 'http://41.179.247.131:9704/translate'
+            payload = {"text": trans_fr, "source":"ru", "target":"ar"}
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            trans_ru_ar = file_response.json()['output']
+            session['trans_ru_ar'] = trans_ru_ar
+
+            with open(os.path.join(output_dir, 'MT', 'trans_ru_arabic.txt'), 'w') as f:
+                f.write(trans_ru_ar + '\n')
 
         except:
             print("ERROR FETCHING MT OUTPUT")
@@ -257,9 +279,11 @@ def upload():
             session.pop('trans_ch', None)
             session.pop('trans_en', None)
             session.pop('trans_fr', None)
+            session.pop('trans_ru', None)
             session.pop('trans_ch_ar', None)
             session.pop('trans_en_ar', None)
             session.pop('trans_fr_ar', None)
+            session.pop('trans_ru_ar', None)
             session.pop('diac_sent', None)
             session.pop('out_female_file', None)
             session.pop('out_male_file', None)
@@ -370,8 +394,11 @@ def upload():
             trans_ch = session['trans_ch'],
             trans_en = session['trans_en'],
             trans_fr = session['trans_fr'],
-            trans_en_ar = session['trans_en_ar'],
+            trans_ru = session['trans_ru'],
+            trans_en_ar = session['trans_ch_ar'],
+            trans_fr_ar = session['trans_en_ar'],
             trans_fr_ar = session['trans_fr_ar'],
+            trans_fr_ar = session['trans_ru_ar'],
             diac_sent = session['diac_sent'],
             out_female_file = session['out_female_file'],
             out_male_file = session['out_male_file'])
