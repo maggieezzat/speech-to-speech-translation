@@ -260,7 +260,7 @@ def upload():
             
             #RU/AR
             url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": trans_fr, "source":"ru", "target":"ar"}
+            payload = {"text": trans_ru, "source":"ru", "target":"ar"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ru_ar = file_response.json()['output']
             session['trans_ru_ar'] = trans_ru_ar
