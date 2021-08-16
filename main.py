@@ -85,7 +85,6 @@ def welcome():
                 out_female_file = session['out_female_file'],
                 out_male_file = session['out_male_file'])
         else:
-            #print("I AM HERE")
             return render_template('record.html', 
                 in_file = session['in_file'], 
                 asr_out = session['asr_out'],
@@ -146,8 +145,6 @@ def upload():
         with open(os.path.join(output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
             f.write(asr_out + '\n')
         
-        #asr_out='مرحبا فى مركز الابتكار'
-        
         session['asr_out'] = asr_out.replace('<صخث>', '***')
 
         end = time.time()
@@ -168,13 +165,8 @@ def upload():
         session.pop('diac_sent', None)
         session.pop('out_female_file', None)
         session.pop('out_male_file', None)
-        
-
         session['error_message'] = 'There has been a problem with the ASR output.'
-        #print(session['error_message'])
         return render_template("record.html", error_message=session['error_message'])
-        #session.pop('error_message', None)
-        #return render_template("record.html")
     
     if do_trans == 'true':
         ###################################### 2. CHINESE/ENGLISH/FRENCH TRANSLATION ######################################
@@ -198,7 +190,6 @@ def upload():
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"en"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_en = file_response.json()['output']
-            #trans_en = 'Hi! This feature is under construction.'
             session['trans_en'] = trans_en
 
             with open(os.path.join(output_dir, 'MT', 'trans_english.txt'), 'w') as f:
@@ -209,7 +200,6 @@ def upload():
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"fr"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_fr = file_response.json()['output']
-            #trans_fr = " Hi! Cette fonctionnalité en sous construction."
             session['trans_fr'] = trans_fr
 
             with open(os.path.join(output_dir, 'MT', 'trans_french.txt'), 'w') as f:
@@ -231,7 +221,6 @@ def upload():
             payload = {"text": trans_en, "source":"en", "target":"ar"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_en_ar = file_response.json()['output']
-            #trans_en_ar = 'مرحبا! هذه الخاصية تحت الانشاء'
             session['trans_en_ar'] = trans_en_ar
 
             with open(os.path.join(output_dir, 'MT', 'trans_en_arabic.txt'), 'w') as f:
@@ -242,7 +231,6 @@ def upload():
             payload = {"text": trans_fr, "source":"fr", "target":"ar"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_fr_ar = file_response.json()['output']
-            #trans_fr_ar = 'مرحبا! هذه الخاصية تحت الانشاء'
             session['trans_fr_ar'] = trans_fr_ar
 
             with open(os.path.join(output_dir, 'MT', 'trans_fr_arabic.txt'), 'w') as f:
@@ -280,7 +268,6 @@ def upload():
         trans_en_ar = re.sub(r'\d+', ' ', trans_en_ar)
         trans_en_ar = re.sub(' +', ' ', trans_en_ar)
         payload = {'text': trans_en_ar}
-        #payload = {'text': asr_out}
         req = rq.post('https://farasa-api.qcri.org/msa/webapi/diacritizeV2', headers = {'content-type': "application/json"}, json=payload)
         diac_sent = req.json()['output']
         diac_sent = complete_tashkeel(diac_sent)
@@ -375,11 +362,6 @@ def upload():
             out_female_file = session['out_female_file'],
             out_male_file = session['out_male_file'])
     else:
-        #print(session['in_file'])
-        #print(session['asr_out'])
-        #print(session['diac_sent'])
-        #print(session['out_female_file'])
-        #print(session['out_male_file'])
         return render_template('record.html', 
             in_file = session['in_file'], 
             asr_out = session['asr_out'],
