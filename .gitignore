@@ -6,3 +6,5 @@ myenv/*
 __pycache__/*
 .uwsgi_plugins_builder/*
 16*/*
+static/in*
+static/out*
