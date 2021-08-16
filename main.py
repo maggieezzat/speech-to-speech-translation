@@ -1,3 +1,5 @@
+# This Python file uses the following encoding: utf-8
+
 from flask import Flask
 import requests as rq
 from flask import redirect
@@ -29,7 +31,7 @@ def complete_tashkeel(sentence):
         #or m.group(0)[0] =='\u064A'
         if m.group(0)[0] == '\u0627'  or m.group(0)[0] == '\u0648' or m.group(0)[0] == '\u0625':
           continue
-        new_sentence = new_sentence.replace(m.group(0), m.group(0)[0]+'َ'+m.group(0)[1])
+        new_sentence = new_sentence.replace(m.group(0), m.group(0)[0]+''+m.group(0)[1])
 
     sentence = new_sentence
     newer_sentence = sentence
@@ -37,7 +39,7 @@ def complete_tashkeel(sentence):
     for m in re.finditer('[\u0621-\u064A]\u064A', sentence):
         if m.group(0)[0] == '\u0627' or m.group(0)[0] =='\u064A' or m.group(0)[0] == '\u0648' or m.group(0)[0] == '\u0623':
           continue 
-        newer_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+'ِ'+m.group(0)[1])
+        newer_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+''+m.group(0)[1])
 
     sentence = newer_sentence
     final_sentence = sentence
@@ -45,24 +47,24 @@ def complete_tashkeel(sentence):
     for m in re.finditer('[\u0621-\u064A]\u0648', sentence):
         if m.group(0)[0] == '\u0627' or m.group(0)[0] =='\u064A' or m.group(0)[0] == '\u0648' or m.group(0)[0] =='\u0625':
           continue 
-        newer_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+'ُ'+m.group(0)[1])
+        newer_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+''+m.group(0)[1])
 
     sentence = newer_sentence
     final_sentence = sentence
 
     for m in re.finditer('[\u0621-\u064A]\u0651\u0627', sentence):
-        newer_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+'َّ'+m.group(0)[2])
+        newer_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+''+m.group(0)[2])
 
     sentence = newer_sentence
     final_sentence = sentence
 
     for m in re.finditer('[\u0621-\u064A]\u0651\u064A', sentence):
-        newer_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+'ِّ'+m.group(0)[2])
+        newer_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+''+m.group(0)[2])
     sentence = newer_sentence
     final_sentence = sentence
 
     for m in re.finditer('[\u0621-\u064A]\u0651\u0648', sentence):
-        final_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+'ُّ'+m.group(0)[2])  
+        final_sentence = newer_sentence.replace(m.group(0), m.group(0)[0]+''+m.group(0)[2])  
 
     return final_sentence
 
@@ -81,6 +83,8 @@ def welcome():
                 trans_ch_ar = session['trans_ch_ar'],
                 trans_en_ar = session['trans_en_ar'],
                 trans_fr_ar = session['trans_fr_ar'],
+                trans_ru_ar = session['trans_ru_ar'],
+                trans_ar_ru = session['trans_ar_ru'],
                 diac_sent=session['diac_sent'],
                 out_female_file = session['out_female_file'],
                 out_male_file = session['out_male_file'])
@@ -162,6 +166,8 @@ def upload():
         session.pop('trans_ch_ar', None)
         session.pop('trans_en_ar', None)
         session.pop('trans_fr_ar', None)
+        session.pop('trans_ru_ar', None)
+        session.pop('trans_ar_ru', None)
         session.pop('diac_sent', None)
         session.pop('out_female_file', None)
         session.pop('out_male_file', None)
@@ -236,6 +242,27 @@ def upload():
             with open(os.path.join(output_dir, 'MT', 'trans_fr_arabic.txt'), 'w') as f:
                 f.write(trans_fr_ar + '\n')
 
+            #RU/AR
+            url = 'http://41.179.247.131:9704/translate'
+            payload = {"text": trans_fr, "source":"ru", "target":"ar"}
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            trans_ru_ar = file_response.json()['output']
+            session['trans_ru_ar'] = trans_ru_ar
+
+            with open(os.path.join(output_dir, 'MT', 'trans_ru_arabic.txt'), 'w') as f:
+                f.write(trans_ru_ar + '\n')
+
+            #AR/RU
+            url = 'http://41.179.247.131:9704/translate'
+            payload = {"text": trans_fr, "source":"ar", "target":"ru"}
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            trans_ar_ru = file_response.json()['output']
+            session['trans_ar_ru'] = trans_ar_ru
+
+            with open(os.path.join(output_dir, 'MT', 'trans_ar_russian.txt'), 'w') as f:
+                f.write(trans_ar_ru + '\n')
+
+
         except:
             print("ERROR FETCHING MT OUTPUT")
             session.pop('in_file', None)
@@ -246,6 +273,8 @@ def upload():
             session.pop('trans_ch_ar', None)
             session.pop('trans_en_ar', None)
             session.pop('trans_fr_ar', None)
+            session.pop('trans_ru_ar', None)
+            session.pop('trans_ar_ru', None)
             session.pop('diac_sent', None)
             session.pop('out_female_file', None)
             session.pop('out_male_file', None)

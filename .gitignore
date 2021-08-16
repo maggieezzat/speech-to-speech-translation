@@ -8,3 +8,4 @@ __pycache__/*
 16*/*
 static/in*
 static/out*
+.DS_Store
