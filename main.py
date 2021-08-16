@@ -131,15 +131,11 @@ def upload():
     save_dir = 'static'
     output_dir = str(int(time.time()))
 
-    #os.makedirs('static/' + output_dir)
     os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
 
     ###################################### 1. SPEECH RECOGNITION ######################################
     try:
         start = time.time()
-        
-        #with open(os.path.join(save_dir, output_dir, filename), 'wb') as f:
-        #    f.write(audio_data)
 
         with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
             f.write(audio_data)
@@ -160,7 +156,9 @@ def upload():
         with open(os.path.join(save_dir, output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
             f.write(asr_out + '\n')
         
-        session['asr_out'] = asr_out.replace('<صخث>', '***')
+        asr_out = asr_out.replace('<صخث>', '***')
+        asr_out = asr_out.replace('<noise>', '***')
+        session['asr_out'] = asr_out
 
         end = time.time()
         asr_time = end - start
@@ -190,7 +188,6 @@ def upload():
 
             #CHINESE
             url = 'http://41.179.247.131:9704/translate'
-            #'Content-Type: application/json
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"zh"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ch = file_response.json()['output']
@@ -345,24 +342,17 @@ def upload():
         out_male = 'out_male_{}.wav'.format(str(int(time.time())))
         out_female = 'out_female_{}.wav'.format(str(int(time.time())))
 
-        #if os.path.exists(os.path.join(save_dir, output_dir, 'TTS' ,out_female)):
-        #    os.remove(os.path.join(save_dir, out_female))
         with open(os.path.join(save_dir, output_dir, 'TTS', out_female), 'wb') as f:
             f.write(file_response.content)
-        #with open(os.path.join(output_dir, 'TTS', 'out_female.wav'), 'wb') as f:
-        #    f.write(file_response.content)
         
         session['out_female_file'] = os.path.join( output_dir, 'TTS', out_female)
 
         url = 'http://41.179.247.131:5000/'
         params = {'txt' : diac_sent, 'gender' : '1'}
         file_response = rq.post(url, params=params)
-        #if os.path.exists(os.path.join(save_dir, out_male)):
-        #    os.remove(os.path.join(save_dir, out_male))
+
         with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
             f.write(file_response.content)
-        #with open(os.path.join(output_dir, 'TTS', 'out_male.wav'), 'wb') as f:
-        #    f.write(file_response.content)
         
         session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
         
@@ -423,15 +413,11 @@ def upload_asr():
     save_dir = 'static'
     output_dir = str(int(time.time()))
 
-    #os.makedirs('static/' + output_dir)
     os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
 
     ###################################### 1. SPEECH RECOGNITION ######################################
     try:
         start = time.time()
-        
-        #with open(os.path.join(save_dir, filename), 'wb') as f:
-        #    f.write(audio_data)
 
         with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
             f.write(audio_data)
