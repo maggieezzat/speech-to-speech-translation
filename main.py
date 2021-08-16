@@ -131,7 +131,7 @@ def upload():
     save_dir = 'static'
     output_dir = str(int(time.time()))
 
-    os.makedirs('static/' + output_dir)
+    #os.makedirs('static/' + output_dir)
     os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
 
     ###################################### 1. SPEECH RECOGNITION ######################################
@@ -144,7 +144,7 @@ def upload():
         with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
             f.write(audio_data)
 
-        session['in_file'] = os.path.join(save_dir, output_dir, 'ASR', filename)
+        session['in_file'] = os.path.join(output_dir, 'ASR', filename)
         
         end = time.time()
         prep_time = end - start
@@ -186,7 +186,7 @@ def upload():
     if do_trans == 'true':
         ###################################### 2. CHINESE/ENGLISH/FRENCH TRANSLATION ######################################
         try:
-            os.makedirs(os.path.join(output_dir, 'MT'))
+            os.makedirs(os.path.join(save_dir, output_dir, 'MT'))
 
             #CHINESE
             url = 'http://41.179.247.131:9704/translate'
@@ -271,7 +271,8 @@ def upload():
             with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ru_arabic.txt'), 'w') as f:
                 f.write(trans_ru_ar + '\n')
 
-        except:
+        except Exception as e:
+            print(e)
             print("ERROR FETCHING MT OUTPUT")
             session.pop('in_file', None)
             session.pop('asr_out', None)
@@ -351,7 +352,7 @@ def upload():
         #with open(os.path.join(output_dir, 'TTS', 'out_female.wav'), 'wb') as f:
         #    f.write(file_response.content)
         
-        session['out_female_file'] = os.path.join(save_dir, output_dir, 'TTS', out_female)
+        session['out_female_file'] = os.path.join( output_dir, 'TTS', out_female)
 
         url = 'http://41.179.247.131:5000/'
         params = {'txt' : diac_sent, 'gender' : '1'}
@@ -363,7 +364,7 @@ def upload():
         #with open(os.path.join(output_dir, 'TTS', 'out_male.wav'), 'wb') as f:
         #    f.write(file_response.content)
         
-        session['out_male_file'] = os.path.join(save_dir, output_dir, 'TTS', out_male)
+        session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
         
         end = time.time()
         tts_time = end - start
@@ -394,10 +395,10 @@ def upload():
             trans_en = session['trans_en'],
             trans_fr = session['trans_fr'],
             trans_ru = session['trans_ru'],
-            trans_en_ar = session['trans_ch_ar'],
-            trans_fr_ar = session['trans_en_ar'],
+            trans_ch_ar = session['trans_ch_ar'],
+            trans_en_ar = session['trans_en_ar'],
             trans_fr_ar = session['trans_fr_ar'],
-            trans_fr_ar = session['trans_ru_ar'],
+            trans_ru_ar = session['trans_ru_ar'],
             diac_sent = session['diac_sent'],
             out_female_file = session['out_female_file'],
             out_male_file = session['out_male_file'])
@@ -422,7 +423,7 @@ def upload_asr():
     save_dir = 'static'
     output_dir = str(int(time.time()))
 
-    os.makedirs('static/' + output_dir)
+    #os.makedirs('static/' + output_dir)
     os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
 
     ###################################### 1. SPEECH RECOGNITION ######################################
