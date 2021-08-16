@@ -106,9 +106,10 @@ if (navigator.getUserMedia) {
       spinner.setAttribute('role', 'status');
       spinnerDiv.appendChild(spinner);
 
+      uploadText= upload.innerText
 
       upload.disabled = true;
-      saveRecordings();
+      saveRecordings(uploadText);
     }
 
     mediaRecorder.onstop = function(e) {
@@ -235,13 +236,13 @@ function endRecording() {
 
 
 
-function saveRecordings() {
+function saveRecordings(uploadText) {
   mediaStreamSource.disconnect();
   allClips = document.querySelectorAll('.clip');
-  uploadCip();
+  uploadCip(uploadText);
 }
 
-function uploadCip() {
+function uploadCip(uploadText) {
   
   var clip = allClips[0];
   // console.log(clip)
@@ -260,7 +261,10 @@ function uploadCip() {
       var blob = this.response;
       console.log(blob)
       var ajaxRequest = new XMLHttpRequest();
-      var uploadUrl = '/upload'
+      var uploadUrl = '/upload';
+      if (uploadText == 'decode'){
+        uploadUrl = '/upload_asr'
+      }
       
       ajaxRequest.open('POST', uploadUrl, true);
       ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
