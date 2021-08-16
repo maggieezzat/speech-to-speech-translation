@@ -106,10 +106,10 @@ def welcome():
 @app.route("/asr")
 def asr():
 
-    if 'in_file' in session.keys():
+    if 'in_file_asr_only' in session.keys():
         return render_template('asr.html', 
-            in_file = session['in_file'], 
-            asr_out = session['asr_out'])
+            in_file_asr_only = session['in_file_asr_only'], 
+            out_file_asr_only = session['out_file_asr_only'])
     elif 'error_message' in session.keys():
         print('error message exists')
         return render_template("asr.html", error_message=session['error_message'])
@@ -402,8 +402,8 @@ def upload():
 
 
 
-@app.route('/upload_asr', methods=['GET', 'POST'])
-def upload_asr():
+@app.route('/uploadAsr', methods=['GET', 'POST'])
+def uploadAsr():
 
     ######################################
 
@@ -422,7 +422,7 @@ def upload_asr():
         with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
             f.write(audio_data)
 
-        session['in_file'] = os.path.join(save_dir, output_dir, 'ASR', filename)
+        session['in_file_asr_only'] = os.path.join( output_dir, 'ASR', filename)
         
         end = time.time()
         prep_time = end - start
@@ -438,7 +438,7 @@ def upload_asr():
         with open(os.path.join(save_dir, output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
             f.write(asr_out + '\n')
         
-        session['asr_out'] = asr_out.replace('<صخث>', '***')
+        session['out_file_asr_only'] = asr_out.replace('<صخث>', '***')
 
         end = time.time()
         asr_time = end - start
@@ -447,16 +447,16 @@ def upload_asr():
     except:
         print("ERROR FETCHING ASR OUTPUT")
         
-        session.pop('in_file', None)
-        session.pop('asr_out', None)
+        session.pop('in_file_asr_only', None)
+        session.pop('out_file_asr_only', None)
         session['error_message'] = 'There has been a problem with the ASR output.'
         return render_template("asr.html", error_message=session['error_message'])
         
     print("Successfully Excuted the Pipeline")
     
-    return render_template('record.html', 
-        in_file = session['in_file'], 
-        asr_out = session['asr_out'])
+    return render_template('asr.html', 
+        in_file_asr_only = session['in_file_asr_only'], 
+        out_file_asr_only = session['out_file_asr_only'])
 
 
 

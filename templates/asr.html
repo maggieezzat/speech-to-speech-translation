@@ -25,9 +25,9 @@
                   <canvas class="visualizer" id="visualizer" style='width:50%; height:60px'></canvas>
                   
                   <section class="sound-clips" id='input-audio'>
-                    {% if in_file %}
+                    {% if in_file_asr_only %}
                     <article class="clip">
-                      <audio id="audio-panel" controls src="static/{{ in_file }}">      
+                      <audio id="audio-panel" controls src="static/{{ in_file_asr_only }}">      
                       </audio>
 
 
@@ -88,11 +88,11 @@
               </div>
 
                   <div class="card-group">
-                    {% if asr_out %}
+                    {% if out_file_asr_only %}
                       <div class="card">
                         <h5 class="card-header"> Speech To Text</h5>
                         <div class="card-body">
-                          <p class="card-text" style="text-align: center;">{{ asr_out }}</p>
+                          <p class="card-text" style="text-align: center;">{{ out_file_asr_only }}</p>
                         </div>
                       </div>
                     {% endif %}
@@ -196,7 +196,7 @@
         
     </div>
 
-    <script src="static/scripts/app.js"></script>
+    <script src="static/scripts/app_asr.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
