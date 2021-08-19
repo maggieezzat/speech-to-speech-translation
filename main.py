@@ -105,8 +105,8 @@ def welcome():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
 
-    #do_trans = request.args.get('trans')
-    do_trans = 'true'
+    do_trans = request.args.get('trans')
+    #do_trans = 'true'
     ######################################
     session['do_trans'] = do_trans
 

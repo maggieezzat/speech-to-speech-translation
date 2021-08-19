@@ -17,13 +17,13 @@ var canvas = document.getElementById('visualizer');
 var soundClips = document.getElementById('input-audio');
 var cards = document.querySelectorAll('.card');
 
-// var transOn = document.getElementById('trans-on');
-// var transOff = document.getElementById('trans-off');
+var transOn = document.getElementById('trans-on');
+var transOff = document.getElementById('trans-off');
 
 var clipContainer;
 var divRow;
 var divCol1;
-//var divCol2;
+var divCol2;
 
 var mediaRecorder = null;
 var mediaStreamSource = null;
@@ -56,71 +56,71 @@ function fix_dpi() {
 fix_dpi();
 
 
-// function createToggle() {
+function createToggle() {
 
-//   var divContainer = document.createElement('div');
-//   divContainer.setAttribute('class', 'btn-group btn-group-toggle');
-//   divContainer.setAttribute('data-toggle', 'buttons');
+  var divContainer = document.createElement('div');
+  divContainer.setAttribute('class', 'btn-group btn-group-toggle');
+  divContainer.setAttribute('data-toggle', 'buttons');
 
-//   var onLabel = document.createElement('label');
-//   onLabel.setAttribute('id', 'trans-on-label');
-//   onLabel.setAttribute('class', 'btn btn-secondary active');
-//   onLabel.setAttribute('style', 'width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem');
-//   onLabel.innerText = 'Translate On';
+  var onLabel = document.createElement('label');
+  onLabel.setAttribute('id', 'trans-on-label');
+  onLabel.setAttribute('class', 'btn btn-secondary active');
+  onLabel.setAttribute('style', 'width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem');
+  onLabel.innerText = 'Translate On';
 
-//   var offLabel = document.createElement('label');
-//   offLabel.setAttribute('id', 'trans-off-label');
-//   offLabel.setAttribute('class', 'btn btn-secondary active');
-//   offLabel.setAttribute('style', 'width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem');
-//   offLabel.innerText = 'Translate Off';
+  var offLabel = document.createElement('label');
+  offLabel.setAttribute('id', 'trans-off-label');
+  offLabel.setAttribute('class', 'btn btn-secondary active');
+  offLabel.setAttribute('style', 'width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem');
+  offLabel.innerText = 'Translate Off';
 
-//   var onInput = document.createElement('input');
-//   onInput.setAttribute('type', 'radio');
-//   onInput.setAttribute('id', 'trans-on');
-//   onInput.setAttribute('autocomplete', 'off');
+  var onInput = document.createElement('input');
+  onInput.setAttribute('type', 'radio');
+  onInput.setAttribute('id', 'trans-on');
+  onInput.setAttribute('autocomplete', 'off');
   
-//   onInput.checked = true;
-//   onLabel.disabled = false;
-//   onLabel.style.background = 'rgb(12, 168, 12)';
-//   offLabel.style.background = '#888888';
-//   offLabel.disabled = true;
+  onInput.checked = true;
+  onLabel.disabled = false;
+  onLabel.style.background = 'rgb(12, 168, 12)';
+  offLabel.style.background = '#888888';
+  offLabel.disabled = true;
 
-//   var offInput = document.createElement('input');
-//   offInput.setAttribute('type', 'radio');
-//   offInput.setAttribute('id', 'trans-off');
-//   offInput.setAttribute('autocomplete', 'off');
+  var offInput = document.createElement('input');
+  offInput.setAttribute('type', 'radio');
+  offInput.setAttribute('id', 'trans-off');
+  offInput.setAttribute('autocomplete', 'off');
 
-//   onInput.change = function() {
-//       console.log("on clicked");
-//       onInput.checked = true;
-//       offInput.checked = false;
-//       console.log(onInput.checked);
-//       console.log(offInput.checked);
-//       onLabel.disabled = false;
-//       onLabel.style.background = 'rgb(12, 168, 12)';
-//       offLabel.style.background = '#888888';
-//       offLabel.disabled = true;
-//   }
+  onInput.change = function() {
+      console.log("on clicked");
+      onInput.checked = true;
+      offInput.checked = false;
+      console.log(onInput.checked);
+      console.log(offInput.checked);
+      onLabel.disabled = false;
+      onLabel.style.background = 'rgb(12, 168, 12)';
+      offLabel.style.background = '#888888';
+      offLabel.disabled = true;
+  }
 
-//   offInput.change = function() {
-//       console.log("off clicked");
-//       onInput.checked = false;
-//       offInput.checked = true;
-//       console.log(onInput.checked);
-//       console.log(offInput.checked);
-//       onLabel.style.background = '#888888';
-//       onLabel.disabled = true;
-//       offLabel.disabled = false;
-//       offLabel.style.background = 'rgb(168, 48, 12)';
-//   }
+  offInput.change = function() {
+      console.log("off clicked");
+      onInput.checked = false;
+      offInput.checked = true;
+      console.log(onInput.checked);
+      console.log(offInput.checked);
+      onLabel.style.background = '#888888';
+      onLabel.disabled = true;
+      offLabel.disabled = false;
+      offLabel.style.background = 'rgb(168, 48, 12)';
+  }
   
-//   onLabel.appendChild(onInput);
-//   offLabel.appendChild(offInput);
-//   divContainer.appendChild(onLabel);
-//   divContainer.appendChild(offLabel);
+  onLabel.appendChild(onInput);
+  offLabel.appendChild(offInput);
+  divContainer.appendChild(onLabel);
+  divContainer.appendChild(offLabel);
 
-//   return divContainer;
-// }
+  return divContainer;
+}
 
 var allClips;
 var clipIndex;
@@ -155,33 +155,33 @@ if (navigator.getUserMedia) {
         cards[i].style.visibility='hidden';
       }
       ////////////
-      //var clipContainer = document.createElement('article');
-      // divRow = document.createElement('div');
-      // divRow.setAttribute('class', 'row');
-      // divRow.setAttribute('id', 'audio-trans');
-      //divRow.setAttribute('style', 'width: 100%; height:80px');
+      var clipContainer = document.createElement('article');
+      divRow = document.createElement('div');
+      divRow.setAttribute('class', 'row');
+      divRow.setAttribute('id', 'audio-trans');
+      divRow.setAttribute('style', 'width: 100%; height:80px');
       
-      // divCol1 = document.createElement('div');
-      // divCol1.setAttribute('class', 'col-sm-8');
-      // divCol1.setAttribute('id', 'audio-col');
-      // divCol2 = document.createElement('div');
-      // divCol2.setAttribute('class', 'col-sm-3');
-      // divCol2.setAttribute('id', 'toggle-col');
-      // divCol2.setAttribute('style', 'display: inline-block; padding-top: 1rem; ');
+      divCol1 = document.createElement('div');
+      divCol1.setAttribute('class', 'col-sm-4');
+      divCol1.setAttribute('id', 'audio-col');
+      divCol2 = document.createElement('div');
+      divCol2.setAttribute('class', 'col-sm-2');
+      divCol2.setAttribute('id', 'toggle-col');
+      divCol2.setAttribute('style', 'display: inline-block; padding-top: 1rem; ');
 
-      //var toggleDiv  = createToggle();
-      //divCol2.appendChild(toggleDiv);
+      var toggleDiv  = createToggle();
+      divCol2.appendChild(toggleDiv);
 
-      // divRow.appendChild(divCol1);
-      //divRow.appendChild(divCol2);
+      divRow.appendChild(divCol1);
+      divRow.appendChild(divCol2);
 
-      // clipContainer.appendChild(divRow);
+      clipContainer.appendChild(divRow);
       //clipContainer.appendChild(audio);
       
-      //soundClips.innerHTML = '';
-      //soundClips.appendChild(clipContainer);
+      soundClips.innerHTML = '';
+      soundClips.appendChild(clipContainer);
 
-      //divRow.style.visibility = 'hidden';
+      divRow.style.visibility = 'hidden';
 
 
       visualize();
@@ -219,35 +219,35 @@ if (navigator.getUserMedia) {
       // console.log("data available after MediaRecorder.stop() called.");
 
       var clipContainer = document.createElement('article');
-      // var divRow = document.createElement('div');
-      // divRow.setAttribute('class', 'row');
-      // divRow.setAttribute('id', 'audio-trans');
-      // divRow.setAttribute('style', 'width: 100%');
+      var divRow = document.createElement('div');
+      divRow.setAttribute('class', 'row');
+      divRow.setAttribute('id', 'audio-trans');
+      divRow.setAttribute('style', 'width: 100%');
       
-      // var divCol1 = document.createElement('div');
-      // divCol1.setAttribute('class', 'col-sm-9');
-      // divCol1.setAttribute('id', 'audio-col');
-      // var divCol2 = document.createElement('div');
-      // divCol2.setAttribute('class', 'col-sm-3');
-      // divCol2.setAttribute('id', 'toggle-col');
-      // divCol2.setAttribute('style', 'display: inline-block; padding-top: 1rem; ');
+      var divCol1 = document.createElement('div');
+      divCol1.setAttribute('class', 'col-sm-9');
+      divCol1.setAttribute('id', 'audio-col');
+      var divCol2 = document.createElement('div');
+      divCol2.setAttribute('class', 'col-sm-3');
+      divCol2.setAttribute('id', 'toggle-col');
+      divCol2.setAttribute('style', 'display: inline-block; padding-top: 1rem; ');
 
       var audio = document.createElement('audio');
       audio.setAttribute('id', 'audio-panel');
      
       clipContainer.classList.add('clip');
       audio.setAttribute('controls', '');
-      //divCol1.appendChild(audio);
+      divCol1.appendChild(audio);
 
-      //divRow.style.visibility = 'visible';
+      divRow.style.visibility = 'visible';
 
-      // var toggleDiv  = createToggle();
-      // divCol2.appendChild(toggleDiv);
+      var toggleDiv  = createToggle();
+      divCol2.appendChild(toggleDiv);
 
-      // divRow.appendChild(divCol1);
-      // divRow.appendChild(divCol2);
+      divRow.appendChild(divCol1);
+      divRow.appendChild(divCol2);
 
-      // clipContainer.appendChild(divRow);
+      clipContainer.appendChild(divRow);
 
       clipContainer.appendChild(audio);
       
@@ -266,38 +266,38 @@ if (navigator.getUserMedia) {
     mediaRecorder.ondataavailable = function(e) {
       chunks.push(e.data);
     }
-    // if (transOn != null){
-    //   transOn.change = function() {
-    //     console.log("on clicked");
-    //     transOn.checked = true;
-    //     transOff.checked = false;
-    //     console.log(transOn.checked);
-    //     console.log(transOff.checked);
-    //     var onLabel = document.getElementById("trans-on-label");
-    //     var offLabel = document.getElementById("trans-off-label");
-    //     onLabel.disabled = false;
-    //     onLabel.style.background = 'rgb(12, 168, 12)';
-    //     offLabel.style.background = '#888888';
-    //     offLabel.disabled = true;
-    //   }
-    // }
+    if (transOn != null){
+      transOn.change = function() {
+        console.log("on clicked");
+        transOn.checked = true;
+        transOff.checked = false;
+        console.log(transOn.checked);
+        console.log(transOff.checked);
+        var onLabel = document.getElementById("trans-on-label");
+        var offLabel = document.getElementById("trans-off-label");
+        onLabel.disabled = false;
+        onLabel.style.background = 'rgb(12, 168, 12)';
+        offLabel.style.background = '#888888';
+        offLabel.disabled = true;
+      }
+    }
     
-    // if (transOff != null){
-    //   transOff.change = function() {
-    //     console.log("off clicked");
-    //     transOn.checked = false;
-    //     transOff.checked = true;
-    //     console.log(transOn.checked);
-    //     console.log(transOff.checked);
-    //     var onLabel = document.getElementById("trans-on-label");
-    //     var offLabel = document.getElementById("trans-off-label");
-    //     onLabel.style.background = '#888888';
-    //     onLabel.disabled = true;
-    //     offLabel.disabled = false;
-    //     offLabel.style.background = 'rgb(168, 48, 12)';
-    //   }
+    if (transOff != null){
+      transOff.change = function() {
+        console.log("off clicked");
+        transOn.checked = false;
+        transOff.checked = true;
+        console.log(transOn.checked);
+        console.log(transOff.checked);
+        var onLabel = document.getElementById("trans-on-label");
+        var offLabel = document.getElementById("trans-off-label");
+        onLabel.style.background = '#888888';
+        onLabel.disabled = true;
+        offLabel.disabled = false;
+        offLabel.style.background = 'rgb(168, 48, 12)';
+      }
 
-    // }
+    }
   
   }
 
@@ -417,8 +417,8 @@ function uploadCip() {
   var audioBlobUrl = clip.querySelector('audio').src;
   // console.log(audioBlobUrl);
 
-  //var toggle = document.getElementById('trans-on');
-  //var translateOn = toggle.checked;
+  var toggle = document.getElementById('trans-on');
+  var translateOn = toggle.checked;
   
   var xhr = new XMLHttpRequest();
   console.log(audioBlobUrl)
@@ -430,8 +430,8 @@ function uploadCip() {
       console.log(blob)
       var ajaxRequest = new XMLHttpRequest();
       //var uploadUrl = '/upload?word=' + word 
-      var uploadUrl = '/upload'
-      //var uploadUrl = '/upload?trans=' + translateOn 
+      //var uploadUrl = '/upload'
+      var uploadUrl = '/upload?trans=' + translateOn 
       
       ajaxRequest.open('POST', uploadUrl, true);
       ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
