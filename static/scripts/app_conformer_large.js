@@ -261,7 +261,7 @@ function uploadCip(uploadText) {
       var blob = this.response;
       console.log(blob)
       var ajaxRequest = new XMLHttpRequest();
-      var uploadUrl = '/uploadAsr';
+      var uploadUrl = '/uploadConformerLarge';
       console.log(uploadText);
       
       ajaxRequest.open('POST', uploadUrl, true);
