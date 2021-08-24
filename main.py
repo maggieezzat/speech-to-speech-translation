@@ -482,7 +482,7 @@ def uploadEgyV2():
         print("PREP Time: " + str(prep_time))
         
         start = time.time()
-        url = 'http://41.179.247.131:6001/'
+        url = 'http://41.179.247.131:6000/'
         files = {'file': open(os.path.join(save_dir, output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
@@ -540,7 +540,7 @@ def uploadEgyV2Finetuned():
         print("PREP Time: " + str(prep_time))
         
         start = time.time()
-        url = 'http://41.179.247.131:6002/'
+        url = 'http://41.179.247.131:6001/'
         files = {'file': open(os.path.join(save_dir, output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
@@ -599,7 +599,7 @@ def uploadConformerLarge():
         print("PREP Time: " + str(prep_time))
         
         start = time.time()
-        url = 'http://41.179.247.131:6003/'
+        url = 'http://41.179.247.131:6002/'
         files = {'file': open(os.path.join(save_dir, output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
@@ -657,7 +657,7 @@ def uploadConformerLargeFinetuned():
         print("PREP Time: " + str(prep_time))
         
         start = time.time()
-        url = 'http://41.179.247.131:6004/'
+        url = 'http://41.179.247.131:6003/'
         files = {'file': open(os.path.join(save_dir, output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
