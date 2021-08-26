@@ -178,7 +178,7 @@ def upload():
     ######################################
     session['do_trans'] = do_trans
 
-    filename = 'input_file.wav'
+    filename = 'input_file.webm'
     audio_data = request.data
 
     save_dir = 'static'
@@ -200,7 +200,7 @@ def upload():
         print("PREP Time: " + str(prep_time))
         
         start = time.time()
-        url = 'http://41.179.247.131:6000/'
+        url = 'http://41.179.247.131:6002/'
         files = {'file': open(os.path.join(save_dir,  output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
@@ -460,7 +460,7 @@ def uploadEgyV2():
 
     ######################################
 
-    filename = 'input_file.wav'
+    filename = 'input_file.webm'
     audio_data = request.data
 
     save_dir = 'static'
@@ -518,7 +518,7 @@ def uploadEgyV2Finetuned():
 
     ######################################
 
-    filename = 'input_file.wav'
+    filename = 'input_file.webm'
     audio_data = request.data
 
     save_dir = 'static'
@@ -577,7 +577,7 @@ def uploadConformerLarge():
 
     ######################################
 
-    filename = 'input_file.wav'
+    filename = 'input_file.webm'
     audio_data = request.data
 
     save_dir = 'static'
@@ -635,7 +635,7 @@ def uploadConformerLargeFinetuned():
 
     ######################################
 
-    filename = 'input_file.wav'
+    filename = 'input_file.webm'
     audio_data = request.data
 
     save_dir = 'static'
