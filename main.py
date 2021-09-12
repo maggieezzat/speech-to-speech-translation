@@ -71,30 +71,13 @@ def complete_tashkeel(sentence):
 def welcome():
 
     if 'in_file' in session.keys():
-        if session['do_trans'] == 'true':
             return render_template('record.html', 
                 in_file = session['in_file'], 
                 asr_out = session['asr_out'],
-                trans_ch = session['trans_ch'],
-                trans_en = session['trans_en'],
-                trans_fr = session['trans_fr'],
-                trans_ru = session['trans_ru'],
-                trans_ch_ar = session['trans_ch_ar'],
-                trans_en_ar = session['trans_en_ar'],
-                trans_fr_ar = session['trans_fr_ar'],
-                trans_ru_ar = session['trans_ru_ar'],
-                diac_sent=session['diac_sent'],
-                out_female_file = session['out_female_file'],
-                out_male_file = session['out_male_file'])
-        else:
-            return render_template('record.html', 
-                in_file = session['in_file'], 
-                asr_out = session['asr_out'],
-                diac_sent=session['diac_sent'],
-                out_female_file = session['out_female_file'],
+                target_translation = session['target_translation'],
+                diac_sent = session['diac_sent'],
                 out_male_file = session['out_male_file'])
 
-    
     elif 'error_message' in session.keys():
         print('error message exists')
         return render_template("record.html", error_message=session['error_message'])
@@ -222,14 +205,8 @@ def upload():
         
         session.pop('in_file', None)
         session.pop('asr_out', None)
-        session.pop('trans_ch', None)
-        session.pop('trans_en', None)
-        session.pop('trans_fr', None)
-        session.pop('trans_ch_ar', None)
-        session.pop('trans_en_ar', None)
-        session.pop('trans_fr_ar', None)
+        session.pop('target_translation', None)
         session.pop('diac_sent', None)
-        session.pop('out_female_file', None)
         session.pop('out_male_file', None)
         session['error_message'] = 'There has been a problem with the ASR output.'
         return render_template("record.html", error_message=session['error_message'])
@@ -238,104 +215,26 @@ def upload():
         ###################################### 2. CHINESE/ENGLISH/FRENCH TRANSLATION ######################################
         try:
             os.makedirs(os.path.join(save_dir, output_dir, 'MT'))
-
-            #CHINESE
+            #target_translation
+            src = "ar"
+            target = "en"
             url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"zh"}
+            payload = {"text": asr_out.replace('<صخث>', ''), "source":src, "target":target}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_ch = file_response.json()['output']
-            session['trans_ch'] = trans_ch
+            target_translation = file_response.json()['output']
+            session['target_translation'] = target_translation
 
-            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_chinese.txt'), 'w') as f:
-                f.write(trans_ch + '\n')
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans.txt'), 'w') as f:
+                f.write(target_translation + '\n')
             
-            
-            #ENGLISH
-            url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"en"}
-            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_en = file_response.json()['output']
-            session['trans_en'] = trans_en
 
-            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_english.txt'), 'w') as f:
-                f.write(trans_en + '\n')
-            
-            #FRENCH
-            url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"fr"}
-            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_fr = file_response.json()['output']
-            session['trans_fr'] = trans_fr
-
-            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_french.txt'), 'w') as f:
-                f.write(trans_fr + '\n')
-            
-            #RUSSIAN
-            url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"ru"}
-            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_ru = file_response.json()['output']
-            session['trans_ru'] = trans_ru
-
-            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_russian.txt'), 'w') as f:
-                f.write(trans_ru + '\n')
-
-            ###################################### 3. ARABIC TRANSLATION ######################################
-            #CH/AR
-            url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": trans_ch, "source":"zh", "target":"ar"}
-            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_ch_ar = file_response.json()['output']
-            session['trans_ch_ar'] = trans_ch_ar
-
-            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ch_arabic.txt'), 'w') as f:
-                f.write(trans_ch_ar + '\n')
-            
-            #EN/AR
-            url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": trans_en, "source":"en", "target":"ar"}
-            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_en_ar = file_response.json()['output']
-            session['trans_en_ar'] = trans_en_ar
-
-            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_en_arabic.txt'), 'w') as f:
-                f.write(trans_en_ar + '\n')
-
-            #FR/AR
-            url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": trans_fr, "source":"fr", "target":"ar"}
-            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_fr_ar = file_response.json()['output']
-            session['trans_fr_ar'] = trans_fr_ar
-
-            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_fr_arabic.txt'), 'w') as f:
-                f.write(trans_fr_ar + '\n')
-            
-            #RU/AR
-            url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": trans_ru, "source":"ru", "target":"ar"}
-            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_ru_ar = file_response.json()['output']
-            session['trans_ru_ar'] = trans_ru_ar
-
-            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ru_arabic.txt'), 'w') as f:
-                f.write(trans_ru_ar + '\n')
 
         except Exception as e:
             print(e)
             print("ERROR FETCHING MT OUTPUT")
             session.pop('in_file', None)
             session.pop('asr_out', None)
-            session.pop('trans_ch', None)
             session.pop('trans_en', None)
-            session.pop('trans_fr', None)
-            session.pop('trans_ru', None)
-            session.pop('trans_ch_ar', None)
-            session.pop('trans_en_ar', None)
-            session.pop('trans_fr_ar', None)
-            session.pop('trans_ru_ar', None)
-            session.pop('diac_sent', None)
-            session.pop('out_female_file', None)
             session.pop('out_male_file', None)
             session['error_message'] = 'There has been a problem with the translation. Please retry.'
             return render_template("record.html",error_message= session['error_message'])
@@ -373,14 +272,8 @@ def upload():
         print("ERROR FETCHING DIAC OUTPUT")
         session.pop('in_file', None)
         session.pop('asr_out', None)
-        session.pop('trans_ch', None)
-        session.pop('trans_en', None)
-        session.pop('trans_fr', None)
-        session.pop('trans_ch_ar', None)
-        session.pop('trans_en_ar', None)
-        session.pop('trans_fr_ar', None)
+        session.pop('target_translation', None)
         session.pop('diac_sent', None)
-        session.pop('out_female_file', None)
         session.pop('out_male_file', None)
         session['error_message'] = 'There has been a problem with the diacritization. Please retry.'
         return render_template("record.html", error_message = session['error_message'] )
@@ -416,14 +309,8 @@ def upload():
         print("ERROR FETCHING TTS OUTPUT")
         session.pop('in_file', None)
         session.pop('asr_out', None)
-        session.pop('trans_ch', None)
-        session.pop('trans_en', None)
-        session.pop('trans_fr', None)
-        session.pop('trans_ch_ar', None)
-        session.pop('trans_en_ar', None)
-        session.pop('trans_fr_ar', None)
+        session.pop('target_translation', None)
         session.pop('diac_sent', None)
-        session.pop('out_female_file', None)
         session.pop('out_male_file', None)
         session['error_message'] = 'There has been a problem with converting the text to speech. Please retry'
         return render_template("record.html", error_message=session['error_message'])
@@ -432,19 +319,11 @@ def upload():
     
     if do_trans == 'true':
         return render_template('record.html', 
-            in_file = session['in_file'], 
-            asr_out = session['asr_out'],
-            trans_ch = session['trans_ch'],
-            trans_en = session['trans_en'],
-            trans_fr = session['trans_fr'],
-            trans_ru = session['trans_ru'],
-            trans_ch_ar = session['trans_ch_ar'],
-            trans_en_ar = session['trans_en_ar'],
-            trans_fr_ar = session['trans_fr_ar'],
-            trans_ru_ar = session['trans_ru_ar'],
-            diac_sent = session['diac_sent'],
-            out_female_file = session['out_female_file'],
-            out_male_file = session['out_male_file'])
+                in_file = session['in_file'], 
+                asr_out = session['asr_out'],
+                target_translation = session['target_translation'],
+                diac_sent = session['diac_sent'],
+                out_male_file = session['out_male_file'])
     else:
         return render_template('record.html', 
             in_file = session['in_file'], 
