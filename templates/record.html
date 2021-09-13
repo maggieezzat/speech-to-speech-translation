@@ -102,13 +102,13 @@
 
           {% if target_translation %}
           <div class="card">
-            <h5 class="card-header"> Translation I </h5>
+            <h5 class="card-header"> Translation</h5>
             <ul class="list-group list-group-flush">
               <!--***************************************************************-->
               <li class="list-group-item">
                 <h6 class="card-subtitle mb-2 text-muted">ar/en</h6>
-                {% if trans_en %}
-                {{ trans_en }}
+                {% if target_translation %}
+                {{ target_translation }}
                 {% endif %}
               </li>
               {% endif %}

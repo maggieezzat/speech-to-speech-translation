@@ -234,27 +234,28 @@ def upload():
             print("ERROR FETCHING MT OUTPUT")
             session.pop('in_file', None)
             session.pop('asr_out', None)
-            session.pop('trans_en', None)
+            session.pop('target_translation', None)
+            session.pop('diac_sent', None)
             session.pop('out_male_file', None)
             session['error_message'] = 'There has been a problem with the translation. Please retry.'
             return render_template("record.html",error_message= session['error_message'])
     else:
-        trans_en_ar = asr_out
+        target_translation = asr_out
 
     ###################################### 4. DIACTRIZATION ######################################
     try:
         start = time.time()
-        trans_en_ar = trans_en_ar.replace('.', ' ')
-        trans_en_ar = trans_en_ar.replace(',', ' ')
-        trans_en_ar = trans_en_ar.replace('?', ' ')
-        trans_en_ar = trans_en_ar.replace('؟', ' ')
-        trans_en_ar = trans_en_ar.replace('!', ' ')
-        trans_en_ar = trans_en_ar.replace('\\', ' ')
-        trans_en_ar = trans_en_ar.replace('/', ' ')
-        trans_en_ar = trans_en_ar.replace('،', ' ')
-        trans_en_ar = re.sub(r'\d+', ' ', trans_en_ar)
-        trans_en_ar = re.sub(' +', ' ', trans_en_ar)
-        payload = {'text': trans_en_ar}
+        target_translation = target_translation.replace('.', ' ')
+        target_translation = target_translation.replace(',', ' ')
+        target_translation = target_translation.replace('?', ' ')
+        target_translation = target_translation.replace('؟', ' ')
+        target_translation = target_translation.replace('!', ' ')
+        target_translation = target_translation.replace('\\', ' ')
+        target_translation = target_translation.replace('/', ' ')
+        target_translation = target_translation.replace('،', ' ')
+        target_translation = re.sub(r'\d+', ' ', target_translation)
+        target_translation = re.sub(' +', ' ', target_translation)
+        payload = {'text': target_translation}
         req = rq.post('https://farasa-api.qcri.org/msa/webapi/diacritizeV2', headers = {'content-type': "application/json"}, json=payload)
         diac_sent = req.json()['output']
         diac_sent = complete_tashkeel(diac_sent)
@@ -268,8 +269,9 @@ def upload():
         end = time.time()
         diac_time = end - start
         print("DIAC Time: " + str(diac_time))
-    except:
+    except Exception as e:
         print("ERROR FETCHING DIAC OUTPUT")
+        print(e)
         session.pop('in_file', None)
         session.pop('asr_out', None)
         session.pop('target_translation', None)
