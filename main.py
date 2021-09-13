@@ -105,6 +105,73 @@ def welcome():
         print("NO INPUT FILE")
         return render_template("record.html")
 
+
+
+@app.route("/asr_egy_v2")
+def asr_egy_v2():
+
+    if 'in_file_egy_v2' in session.keys():
+        return render_template('egy_v2.html', 
+            in_file_asr_only = session['in_file_egy_v2'], 
+            out_file_asr_only = session['out_file_egy_v2'])
+    elif 'error_message' in session.keys():
+        print('error message exists')
+        return render_template("egy_v2.html", error_message=session['error_message'])
+    else:
+        print("NO INPUT FILE")
+        return render_template("egy_v2.html")
+
+
+
+@app.route("/asr_egy_v2_finetuned")
+def asr_egy_v2_finetuned():
+
+    if 'in_file_egy_v2_finetuned' in session.keys():
+        return render_template('egy_v2_finetuned.html', 
+            in_file_asr_only = session['in_file_egy_v2_finetuned'], 
+            out_file_asr_only = session['out_file_egy_v2_finetuned'])
+    elif 'error_message' in session.keys():
+        print('error message exists')
+        return render_template("egy_v2_finetuned.html", error_message=session['error_message'])
+    else:
+        print("NO INPUT FILE")
+        return render_template("egy_v2_finetuned.html")
+
+
+
+@app.route("/asr_conformer_large")
+def asr_conformer_large():
+
+    if 'in_file_conformer_large' in session.keys():
+        return render_template('conformer_large.html', 
+            in_file_asr_only = session['in_file_conformer_large'], 
+            out_file_asr_only = session['out_file_conformer_large'])
+    elif 'error_message' in session.keys():
+        print('error message exists')
+        return render_template("conformer_large.html", error_message=session['error_message'])
+    else:
+        print("NO INPUT FILE")
+        return render_template("conformer_large.html")
+
+
+
+@app.route("/asr_conformer_large_finetuned")
+def asr_conformer_large_finetuned():
+
+    if 'in_file_conformer_large_finetuned' in session.keys():
+        return render_template('conformer_large_finetuned.html', 
+            in_file_asr_only = session['in_file_conformer_large_finetuned'], 
+            out_file_asr_only = session['out_file_conformer_large_finetuned'])
+    elif 'error_message' in session.keys():
+        print('error message exists')
+        return render_template("conformer_large_finetuned.html", error_message=session['error_message'])
+    else:
+        print("NO INPUT FILE")
+        return render_template("conformer_large_finetuned.html")
+
+
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
 
@@ -113,43 +180,40 @@ def upload():
     ######################################
     session['do_trans'] = do_trans
 
-    filename = 'input_file.wav'
+    filename = 'input_file.webm'
     audio_data = request.data
 
+    save_dir = 'static'
     output_dir = str(int(time.time()))
 
-    os.makedirs(output_dir)
-    os.makedirs(os.path.join(output_dir, 'ASR'))
-    
-    session['in_file'] = filename
-
-    save_dir = 'static'
+    os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
 
     ###################################### 1. SPEECH RECOGNITION ######################################
     try:
         start = time.time()
-        
-        with open(os.path.join(save_dir, filename), 'wb') as f:
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
             f.write(audio_data)
 
-        with open(os.path.join(output_dir, 'ASR', filename), 'wb') as f:
-            f.write(audio_data)
+        session['in_file'] = os.path.join(output_dir, 'ASR', filename)
         
         end = time.time()
         prep_time = end - start
         print("PREP Time: " + str(prep_time))
         
         start = time.time()
-        url = 'http://41.179.247.131:6000/'
-        files = {'file': open(os.path.join(save_dir, filename), 'rb')}
+        url = 'http://41.179.247.131:6002/'
+        files = {'file': open(os.path.join(save_dir,  output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
         asr_out = json.loads(r.text)['transcript']
 
-        with open(os.path.join(output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
+        with open(os.path.join(save_dir, output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
             f.write(asr_out + '\n')
         
-        session['asr_out'] = asr_out.replace('<صخث>', '***')
+        asr_out = asr_out.replace('<صخث>', '***')
+        asr_out = asr_out.replace('<noise>', '***')
+        session['asr_out'] = asr_out
 
         end = time.time()
         asr_time = end - start
@@ -179,17 +243,16 @@ def upload():
     if do_trans == 'true':
         ###################################### 2. CHINESE/ENGLISH/FRENCH TRANSLATION ######################################
         try:
-            os.makedirs(os.path.join(output_dir, 'MT'))
+            os.makedirs(os.path.join(save_dir, output_dir, 'MT'))
 
             #CHINESE
             url = 'http://41.179.247.131:9704/translate'
-            #'Content-Type: application/json
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"zh"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ch = file_response.json()['output']
             session['trans_ch'] = trans_ch
 
-            with open(os.path.join(output_dir, 'MT', 'trans_chinese.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_chinese.txt'), 'w') as f:
                 f.write(trans_ch + '\n')
             
             
@@ -200,7 +263,7 @@ def upload():
             trans_en = file_response.json()['output']
             session['trans_en'] = trans_en
 
-            with open(os.path.join(output_dir, 'MT', 'trans_english.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_english.txt'), 'w') as f:
                 f.write(trans_en + '\n')
             
             #FRENCH
@@ -210,8 +273,18 @@ def upload():
             trans_fr = file_response.json()['output']
             session['trans_fr'] = trans_fr
 
-            with open(os.path.join(output_dir, 'MT', 'trans_french.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_french.txt'), 'w') as f:
                 f.write(trans_fr + '\n')
+            
+            #RUSSIAN
+            url = 'http://41.179.247.131:9704/translate'
+            payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"ru"}
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            trans_ru = file_response.json()['output']
+            session['trans_ru'] = trans_ru
+
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_russian.txt'), 'w') as f:
+                f.write(trans_ru + '\n')
 
             #RUSSIAN
             url = 'http://41.179.247.131:9704/translate'
@@ -242,7 +315,7 @@ def upload():
             trans_ch_ar = file_response.json()['output']
             session['trans_ch_ar'] = trans_ch_ar
 
-            with open(os.path.join(output_dir, 'MT', 'trans_ch_arabic.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ch_arabic.txt'), 'w') as f:
                 f.write(trans_ch_ar + '\n')
             
             #EN/AR
@@ -252,7 +325,7 @@ def upload():
             trans_en_ar = file_response.json()['output']
             session['trans_en_ar'] = trans_en_ar
 
-            with open(os.path.join(output_dir, 'MT', 'trans_en_arabic.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_en_arabic.txt'), 'w') as f:
                 f.write(trans_en_ar + '\n')
 
             #FR/AR
@@ -262,8 +335,18 @@ def upload():
             trans_fr_ar = file_response.json()['output']
             session['trans_fr_ar'] = trans_fr_ar
 
-            with open(os.path.join(output_dir, 'MT', 'trans_fr_arabic.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_fr_arabic.txt'), 'w') as f:
                 f.write(trans_fr_ar + '\n')
+            
+            #RU/AR
+            url = 'http://41.179.247.131:9704/translate'
+            payload = {"text": trans_ru, "source":"ru", "target":"ar"}
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            trans_ru_ar = file_response.json()['output']
+            session['trans_ru_ar'] = trans_ru_ar
+
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ru_arabic.txt'), 'w') as f:
+                f.write(trans_ru_ar + '\n')
 
             #RU/AR
             url = 'http://41.179.247.131:9704/translate'
@@ -326,9 +409,9 @@ def upload():
         diac_sent = complete_tashkeel(diac_sent)
         session['diac_sent'] = diac_sent
 
-        os.makedirs(os.path.join(output_dir, 'TTS'))
+        os.makedirs(os.path.join(save_dir, output_dir, 'TTS'))
 
-        with open(os.path.join(output_dir, 'TTS', 'diacritized_sent.txt'), 'w') as f:
+        with open(os.path.join(save_dir, output_dir, 'TTS', 'diacritized_sent.txt'), 'w') as f:
                 f.write(diac_sent + '\n')
 
         end = time.time()
@@ -364,26 +447,19 @@ def upload():
         out_male = 'out_male_{}.wav'.format(str(int(time.time())))
         out_female = 'out_female_{}.wav'.format(str(int(time.time())))
 
-        if os.path.exists(os.path.join(save_dir, out_female)):
-            os.remove(os.path.join(save_dir, out_female))
-        with open(os.path.join(save_dir, out_female), 'wb') as f:
-            f.write(file_response.content)
-        with open(os.path.join(output_dir, 'TTS', 'out_female.wav'), 'wb') as f:
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_female), 'wb') as f:
             f.write(file_response.content)
         
-        session['out_female_file'] = out_female
+        session['out_female_file'] = os.path.join( output_dir, 'TTS', out_female)
 
         url = 'http://41.179.247.131:5000/'
         params = {'txt' : diac_sent, 'gender' : '1'}
         file_response = rq.post(url, params=params)
-        if os.path.exists(os.path.join(save_dir, out_male)):
-            os.remove(os.path.join(save_dir, out_male))
-        with open(os.path.join(save_dir, out_male), 'wb') as f:
-            f.write(file_response.content)
-        with open(os.path.join(output_dir, 'TTS', 'out_male.wav'), 'wb') as f:
+
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
             f.write(file_response.content)
         
-        session['out_male_file'] = out_male
+        session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
         
         end = time.time()
         tts_time = end - start
@@ -434,6 +510,239 @@ def upload():
             diac_sent = session['diac_sent'],
             out_female_file = session['out_female_file'],
             out_male_file = session['out_male_file'])
+
+
+
+@app.route('/uploadEgyV2', methods=['GET', 'POST'])
+def uploadEgyV2():
+
+    ######################################
+
+    filename = 'input_file.webm'
+    audio_data = request.data
+
+    save_dir = 'static'
+    output_dir = str(int(time.time()))
+
+    os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
+
+    ###################################### 1. SPEECH RECOGNITION ######################################
+    try:
+        start = time.time()
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
+            f.write(audio_data)
+
+        session['in_file_egy_v2'] = os.path.join( output_dir, 'ASR', filename)
+        
+        end = time.time()
+        prep_time = end - start
+        print("PREP Time: " + str(prep_time))
+        
+        start = time.time()
+        url = 'http://41.179.247.131:6000/'
+        files = {'file': open(os.path.join(save_dir, output_dir, 'ASR', filename), 'rb')}
+
+        r = rq.post(url, files=files)
+        asr_out = json.loads(r.text)['transcript']
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
+            f.write(asr_out + '\n')
+        
+        session['out_file_egy_v2'] = asr_out.replace('<صخث>', '***')
+
+        end = time.time()
+        asr_time = end - start
+        
+        print("ASR Time: " + str(asr_time))
+    except:
+        print("ERROR FETCHING ASR OUTPUT")
+        
+        session.pop('in_file_egy_v2', None)
+        session.pop('out_file_egy_v2', None)
+        session['error_message'] = 'There has been a problem with the ASR output.'
+        return render_template("egy_v2.html", error_message=session['error_message'])
+        
+    print("Successfully Excuted the Pipeline")
+    
+    return render_template('egy_v2.html', 
+        in_file_asr_only = session['in_file_egy_v2'], 
+        out_file_asr_only = session['out_file_egy_v2'])
+
+
+
+@app.route('/uploadEgyV2Finetuned', methods=['GET', 'POST'])
+def uploadEgyV2Finetuned():
+
+    ######################################
+
+    filename = 'input_file.webm'
+    audio_data = request.data
+
+    save_dir = 'static'
+    output_dir = str(int(time.time()))
+
+    os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
+
+    ###################################### 1. SPEECH RECOGNITION ######################################
+    try:
+        start = time.time()
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
+            f.write(audio_data)
+
+        session['in_file_egy_v2_finetuned'] = os.path.join( output_dir, 'ASR', filename)
+        
+        end = time.time()
+        prep_time = end - start
+        print("PREP Time: " + str(prep_time))
+        
+        start = time.time()
+        url = 'http://41.179.247.131:6001/'
+        files = {'file': open(os.path.join(save_dir, output_dir, 'ASR', filename), 'rb')}
+
+        r = rq.post(url, files=files)
+        asr_out = json.loads(r.text)['transcript']
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
+            f.write(asr_out + '\n')
+        
+        session['out_file_egy_v2_finetuned'] = asr_out.replace('<صخث>', '***')
+
+        end = time.time()
+        asr_time = end - start
+        
+        print("ASR Time: " + str(asr_time))
+    except:
+        print("ERROR FETCHING ASR OUTPUT")
+        
+        session.pop('in_file_egy_v2_finetuned', None)
+        session.pop('out_file_egy_v2_finetuned', None)
+        session['error_message'] = 'There has been a problem with the ASR output.'
+        return render_template("egy_v2_finetuned.html", error_message=session['error_message'])
+        
+    print("Successfully Excuted the Pipeline")
+    
+    return render_template('egy_v2_finetuned.html', 
+        in_file_asr_only = session['in_file_egy_v2_finetuned'], 
+        out_file_asr_only = session['out_file_egy_v2_finetuned'])
+
+
+
+
+@app.route('/uploadConformerLarge', methods=['GET', 'POST'])
+def uploadConformerLarge():
+
+    ######################################
+
+    filename = 'input_file.webm'
+    audio_data = request.data
+
+    save_dir = 'static'
+    output_dir = str(int(time.time()))
+
+    os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
+
+    ###################################### 1. SPEECH RECOGNITION ######################################
+    try:
+        start = time.time()
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
+            f.write(audio_data)
+
+        session['in_file_conformer_large'] = os.path.join( output_dir, 'ASR', filename)
+        
+        end = time.time()
+        prep_time = end - start
+        print("PREP Time: " + str(prep_time))
+        
+        start = time.time()
+        url = 'http://41.179.247.131:6002/'
+        files = {'file': open(os.path.join(save_dir, output_dir, 'ASR', filename), 'rb')}
+
+        r = rq.post(url, files=files)
+        asr_out = json.loads(r.text)['transcript']
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
+            f.write(asr_out + '\n')
+        
+        session['out_file_conformer_large'] = asr_out.replace('<صخث>', '***')
+
+        end = time.time()
+        asr_time = end - start
+        
+        print("ASR Time: " + str(asr_time))
+    except:
+        print("ERROR FETCHING ASR OUTPUT")
+        
+        session.pop('in_file_conformer_large', None)
+        session.pop('out_file_conformer_large', None)
+        session['error_message'] = 'There has been a problem with the ASR output.'
+        return render_template("conformer_large.html", error_message=session['error_message'])
+        
+    print("Successfully Excuted the Pipeline")
+    
+    return render_template('conformer_large.html', 
+        in_file_asr_only = session['in_file_conformer_large'], 
+        out_file_asr_only = session['out_file_conformer_large'])
+
+
+
+@app.route('/uploadConformerLargeFinetuned', methods=['GET', 'POST'])
+def uploadConformerLargeFinetuned():
+
+    ######################################
+
+    filename = 'input_file.webm'
+    audio_data = request.data
+
+    save_dir = 'static'
+    output_dir = str(int(time.time()))
+
+    os.makedirs(os.path.join(save_dir, output_dir, 'ASR'))
+
+    ###################################### 1. SPEECH RECOGNITION ######################################
+    try:
+        start = time.time()
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', filename), 'wb') as f:
+            f.write(audio_data)
+
+        session['in_file_conformer_large_finetuned'] = os.path.join( output_dir, 'ASR', filename)
+        
+        end = time.time()
+        prep_time = end - start
+        print("PREP Time: " + str(prep_time))
+        
+        start = time.time()
+        url = 'http://41.179.247.131:6003/'
+        files = {'file': open(os.path.join(save_dir, output_dir, 'ASR', filename), 'rb')}
+
+        r = rq.post(url, files=files)
+        asr_out = json.loads(r.text)['transcript']
+
+        with open(os.path.join(save_dir, output_dir, 'ASR', 'asr_output.txt'), 'w') as f:
+            f.write(asr_out + '\n')
+        
+        session['out_file_conformer_large_finetuned'] = asr_out.replace('<صخث>', '***')
+
+        end = time.time()
+        asr_time = end - start
+        
+        print("ASR Time: " + str(asr_time))
+    except:
+        print("ERROR FETCHING ASR OUTPUT")
+        
+        session.pop('in_file_conformer_large_finetuned', None)
+        session.pop('out_file_conformer_large_finetuned', None)
+        session['error_message'] = 'There has been a problem with the ASR output.'
+        return render_template("conformer_large_finetuned.html", error_message=session['error_message'])
+        
+    print("Successfully Excuted the Pipeline")
+    
+    return render_template('conformer_large_finetuned.html', 
+        in_file_asr_only = session['in_file_conformer_large_finetuned'], 
+        out_file_asr_only = session['out_file_conformer_large_finetuned'])
 
 
 

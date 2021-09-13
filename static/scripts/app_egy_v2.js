@@ -261,11 +261,8 @@ function uploadCip(uploadText) {
       var blob = this.response;
       console.log(blob)
       var ajaxRequest = new XMLHttpRequest();
-      var uploadUrl = '/upload';
-      console.log(uploadText)
-      //if (uploadText == 'Decode'){
-      //  uploadUrl = '/upload_asr'
-      //}
+      var uploadUrl = '/uploadEgyV2';
+      console.log(uploadText);
       
       ajaxRequest.open('POST', uploadUrl, true);
       ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
