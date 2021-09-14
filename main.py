@@ -219,7 +219,8 @@ def upload():
         asr_time = end - start
         
         print("ASR Time: " + str(asr_time))
-    except:
+    except Exception as e: 
+        print(e)
         print("ERROR FETCHING ASR OUTPUT")
         
         session.pop('in_file', None)
@@ -368,7 +369,8 @@ def upload():
             with open(os.path.join(output_dir, 'MT', 'trans_ua_arabic.txt'), 'w') as f:
                 f.write(trans_ua_ar + '\n')
 
-        except:
+        except Exception as e: 
+            print(e)
             print("ERROR FETCHING MT OUTPUT")
             session.pop('in_file', None)
             session.pop('asr_out', None)
@@ -417,7 +419,8 @@ def upload():
         end = time.time()
         diac_time = end - start
         print("DIAC Time: " + str(diac_time))
-    except:
+    except Exception as e: 
+        print(e)
         print("ERROR FETCHING DIAC OUTPUT")
         session.pop('in_file', None)
         session.pop('asr_out', None)
@@ -464,7 +467,8 @@ def upload():
         end = time.time()
         tts_time = end - start
         print("TTS Time: " + str(tts_time))
-    except:
+    except Exception as e: 
+        print(e)
         print("ERROR FETCHING TTS OUTPUT")
         session.pop('in_file', None)
         session.pop('asr_out', None)
@@ -555,7 +559,8 @@ def uploadEgyV2():
         asr_time = end - start
         
         print("ASR Time: " + str(asr_time))
-    except:
+    except Exception as e: 
+        print(e)
         print("ERROR FETCHING ASR OUTPUT")
         
         session.pop('in_file_egy_v2', None)
@@ -613,7 +618,8 @@ def uploadEgyV2Finetuned():
         asr_time = end - start
         
         print("ASR Time: " + str(asr_time))
-    except:
+    except Exception as e: 
+        print(e)
         print("ERROR FETCHING ASR OUTPUT")
         
         session.pop('in_file_egy_v2_finetuned', None)
@@ -672,7 +678,8 @@ def uploadConformerLarge():
         asr_time = end - start
         
         print("ASR Time: " + str(asr_time))
-    except:
+    except Exception as e: 
+        print(e)
         print("ERROR FETCHING ASR OUTPUT")
         
         session.pop('in_file_conformer_large', None)
@@ -730,7 +737,8 @@ def uploadConformerLargeFinetuned():
         asr_time = end - start
         
         print("ASR Time: " + str(asr_time))
-    except:
+    except Exception as e: 
+        print(e)
         print("ERROR FETCHING ASR OUTPUT")
         
         session.pop('in_file_conformer_large_finetuned', None)
