@@ -277,6 +277,7 @@ def upload():
             with open(os.path.join(save_dir, output_dir, 'MT', 'trans_french.txt'), 'w') as f:
                 f.write(trans_fr + '\n')
             
+
             #RUSSIAN
             url = 'http://41.179.247.131:9704/translate'
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"ru"}
@@ -287,16 +288,6 @@ def upload():
             with open(os.path.join(save_dir, output_dir, 'MT', 'trans_russian.txt'), 'w') as f:
                 f.write(trans_ru + '\n')
 
-            #RUSSIAN
-            url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"ru"}
-            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_ru = file_response.json()['output']
-            session['trans_ru'] = trans_ru
-
-            with open(os.path.join(output_dir, 'MT', 'trans_russian.txt'), 'w') as f:
-                f.write(trans_ru + '\n')
-
 
             #UKRANIAN
             url = 'http://41.179.247.131:9704/translate'
@@ -305,7 +296,7 @@ def upload():
             trans_ua = file_response.json()['output']
             session['trans_ua'] = trans_ua
 
-            with open(os.path.join(output_dir, 'MT', 'trans_ukrain.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ukrain.txt'), 'w') as f:
                 f.write(trans_ua + '\n')
 
             ###################################### 3. ARABIC TRANSLATION ######################################
@@ -339,6 +330,7 @@ def upload():
             with open(os.path.join(save_dir, output_dir, 'MT', 'trans_fr_arabic.txt'), 'w') as f:
                 f.write(trans_fr_ar + '\n')
             
+
             #RU/AR
             url = 'http://41.179.247.131:9704/translate'
             payload = {"text": trans_ru, "source":"ru", "target":"ar"}
@@ -349,16 +341,6 @@ def upload():
             with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ru_arabic.txt'), 'w') as f:
                 f.write(trans_ru_ar + '\n')
 
-            #RU/AR
-            url = 'http://41.179.247.131:9704/translate'
-            payload = {"text": trans_ru, "source":"ru", "target":"ar"}
-            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            trans_ru_ar = file_response.json()['output']
-            session['trans_ru_ar'] = trans_ru_ar
-
-            with open(os.path.join(output_dir, 'MT', 'trans_ru_arabic.txt'), 'w') as f:
-                f.write(trans_ru_ar + '\n')
-
             #UA/AR
             url = 'http://41.179.247.131:9704/translate'
             payload = {"text": trans_ua, "source":"uk", "target":"ar"}
@@ -366,7 +348,7 @@ def upload():
             trans_ua_ar = file_response.json()['output']
             session['trans_ua_ar'] = trans_ua_ar
 
-            with open(os.path.join(output_dir, 'MT', 'trans_ua_arabic.txt'), 'w') as f:
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ua_arabic.txt'), 'w') as f:
                 f.write(trans_ua_ar + '\n')
 
         except Exception as e: 
