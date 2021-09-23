@@ -324,14 +324,14 @@ def upload():
             speaker = get_lang_Speaker(dest_lang)
             language = get_lang_TTS(dest_lang)
 
-            if speaker["m"]:
+            if "m" in speaker.keys():
                 male_params = '?text='+trans_out+'&speaker='+speaker["m"]+'&language_code='+language+'&sampling_rate=8000'
                 file_response = rq.post(url+male_params)
                 with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
                     f.write(file_response.content)
                 session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
 
-            if speaker["f"]:
+            if "f" in speaker.keys():
                 female_params = '?text='+trans_out+'&speaker='+speaker["f"]+'&language_code='+language+'&sampling_rate=8000'
                 file_response = rq.post(url+female_params)
                 with open(os.path.join(save_dir, output_dir, 'TTS', out_female), 'wb') as f:

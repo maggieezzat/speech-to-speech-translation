@@ -3,7 +3,7 @@ ASR_lang_convertor = {
     "Arabic":"ar-EG",
     "English":"en-US",
     "French":"fr-FR",
-    "Chinese":"zh (cmn-Hans-CN)",
+    "Chinese":"zh",
     "Russian":"ru-RU",
     "Ukraninan":"uk-UA"
 }
@@ -11,7 +11,7 @@ MT_lang_convertor = {
     "Arabic" : "ar",
     "English" : "en",
     "French" : "fr",
-    "Chinese" : "ch",
+    "Chinese" : "zh",
     "Russian" : "ru",
     "Ukraninan" : "uk"
 }
