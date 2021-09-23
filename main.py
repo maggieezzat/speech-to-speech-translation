@@ -91,7 +91,7 @@ def welcome():
 @app.route('/')
 def selectLanguage_page():
     target = [['source language'], ['destination language']] 
-    language = [['Arabic'], ['English'], ['French'], ['Chinese'], ['Russian'], ['Ukraninan']]
+    language = [['English'], ['French'], ['Chinese'], ['Russian'], ['Ukraninan']]
 
     return render_template("ChooseLanguage.html", lang=language, target=target)
 
