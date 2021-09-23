@@ -93,7 +93,7 @@ def selectLanguage_page():
     target = [['source language'], ['destination language']] 
     language = [['Arabic'], ['English'], ['French'], ['Chinese'], ['Russian'], ['Ukraninan']]
 
-    return render_template("showUser.html", lang=language, target=target)
+    return render_template("ChooseLanguage.html", lang=language, target=target)
 
 @app.route("/asr_egy_v2")
 def asr_egy_v2():
