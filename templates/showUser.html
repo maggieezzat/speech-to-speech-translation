@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+
+<body>
+    <form action="/record">
+        <h1>Select Language</h1>
+        <select id="target" name="target">
+            {% for user in target %}
+            <option value="{{user[0]}}">{{user[0]}}</option>
+            {% endfor %}
+        </select>
+        <select id="lang" name="lang">
+            {% for user in lang %}
+            <option value="{{user[0]}}">{{user[0]}}</option>
+            {% endfor %}
+        </select>
+        <button>Continue</button>
+    </form>
+</body>
+
+</html>

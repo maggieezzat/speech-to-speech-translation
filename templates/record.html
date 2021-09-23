@@ -1,233 +1,143 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Speech To Speech Translation</title>	
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
-    <link href="static/styles/app.css" rel="stylesheet" type="text/css">
-    <link rel="shortcut icon" href="#" />
 
-    <link href="static/css/all.css" rel="stylesheet"> 
-  </head>
-  
-  <body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Speech To Speech Translation</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+  <link href="static/styles/app.css" rel="stylesheet" type="text/css">
+  <link rel="shortcut icon" href="#" />
 
-    <div class="container" style="margin-top:0;">
+  <link href="static/css/all.css" rel="stylesheet">
+</head>
 
-      <div class='jumbotron pt-8' style="margin-top:0; padding: 0.3em;">
-            <div class="container" style="margin-top:0; padding: 0.3em;">
-                <h2 class="display-8" style="color: rgb(81, 17, 141);">Speech To Speech Translation</h2>
-                
-                <section class="main-controls">
-              
-                  <canvas class="visualizer" id="visualizer" style='width:50%; height:60px'></canvas>
-                  
-                  <section class="sound-clips" id='input-audio'>
-                    {% if in_file %}
-                    <article class="clip">
-                      <audio id="audio-panel" controls src="static/{{ in_file }}">      
-                      </audio>
+<body>
 
+  <div class="container" style="margin-top:0;">
 
-                          <!-- <div class="row" id="audio-trans" style="width: 100%">
-                                <div class="col-sm-8" style="text-align: center;" id="audio-col">
-                                    <audio id="audio-panel" controls src="static/{{ in_file }}">      
-                                    </audio>
-                                </div>
-                                <div class="col-sm-3" id="toggle-col" style="display: inline-block; padding-top: 1rem; ">
-                                      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        {% if trans_ar %}
-                                        <label id="trans-on-label" class="btn btn-secondary" style="width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem; background:rgb(0, 150, 0)">
-                                          <input type="radio" name="options" id="trans-on" autocomplete="off"> Translate On
-                                        </label>
-                                        <label id="trans-off-label" class="btn btn-secondary" style="width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem; background: #888888;">
-                                          <input type="radio" name="options" id="trans-off" autocomplete="off"> Translate Off
-                                        </label>
-                                        {% else %}
-                                        <label id="trans-on-label" class="btn btn-secondary" style="width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem; background: #888888;">
-                                          <input type="radio" name="options" id="trans-on" autocomplete="off"> Translate On
-                                        </label>
-                                        <label id="trans-off-label" class="btn btn-secondary" style="width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem; background: rgb(199, 0,0)">
-                                          <input type="radio" name="options" id="trans-off" autocomplete="off"> Translate Off
-                                        </label>
-                                        {% endif %}
+    <div class='jumbotron pt-8' style="margin-top:0; padding: 0.3em;">
+      <div class="container" style="margin-top:0; padding: 0.3em;">
+        <h2 class="display-8" style="color: rgb(81, 17, 141);">Speech To Speech Translation</h2>
 
-                                        
-                                      </div>
-                                </div>
-                            </div> -->
-                          
-                    </article>
-                    
-                    {% endif %}
-                    
-                   </section>
-                  <div class='buttons-list' id="buttons">
-                    <button id="record" class="btn btn-primary glyphicon glyphicon-envelope">
-                      <i class="fas fa-record-vinyl"></i>
-                      Record</button>
-                    <button id="stop" class="btn btn-primary">
-                      <i class="fas fa-stop"></i>
-                      Stop</button>
-                    <button id="upload" class="btn btn-primary">
-                      <i class="fas fa-language"></i>
-                      Translate</button>
-                  </div>
-                </section>
-                <!--************************************************************************************-->
-                <div class="d-flex justify-content-center" id='spinner-div'>
-                </div>
-          
-              <div id="error-logs">
-                {% if error_message %} 
-                  <div class="alert alert-danger" role="alert">{{ error_message }}</div>
-                {% endif %}
-          
-              </div>
+        <section class="main-controls">
 
-                  <div class="card-group">
-                    {% if asr_out %}
-                      <div class="card">
-                        <h5 class="card-header"> Speech To Text</h5>
-                        <div class="card-body">
-                          <p class="card-text" style="text-align: center;">{{ asr_out }}</p>
-                        </div>
-                      </div>
-                    {% endif %}
+          <canvas class="visualizer" id="visualizer" style='width:50%; height:60px'></canvas>
 
-                    {% if trans_ch %}
-                    <div class="card">
-                      <h5 class="card-header"> Translation I </h5>
-                      <ul class="list-group list-group-flush">
-                        <!--***************************************************************-->
-                         <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">ar/en</h6>
-                            {% if trans_en %}
-                              {{ trans_en }}
-                            {% endif %}
-                        </li>
-                        <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">ar/fr</h6>
-                          {% if trans_fr %}
-                              {{ trans_fr }}
-                          {% endif %}
-                        </li> 
+          <section class="sound-clips" id='input-audio'>
+            {% if in_file %}
+            <article class="clip">
+              <audio id="audio-panel" controls src="static/{{ in_file }}">
+              </audio>
+            </article>
 
-                         <!--***************************************************************-->
-                         <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">ar/zh</h6>
-                            {{ trans_ch }}
-                        </li>
-                        
-                        <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">ar/ru</h6>
-                          {% if trans_ru %}
-                              {{ trans_ru }}
-                          {% endif %}
-                        </li> 
-                        <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">ar/ua</h6>
-                          {% if trans_ua %}
-                              {{ trans_ua }}
-                          {% endif %}
-                        </li> 
-                       
+            {% endif %}
 
-                      </ul>
-                    </div>
-                    {% endif %}  
+          </section>
+          <div class='buttons-list' id="buttons">
+            <button id="record" class="btn btn-primary glyphicon glyphicon-envelope">
+              <i class="fas fa-record-vinyl"></i>
+              Record</button>
+            <button id="stop" class="btn btn-primary">
+              <i class="fas fa-stop"></i>
+              Stop</button>
+            <button id="upload" class="btn btn-primary">
+              <i class="fas fa-language"></i>
+              Translate</button>
+          </div>
+        </section>
+        <!--************************************************************************************-->
+        <div class="d-flex justify-content-center" id='spinner-div'>
+        </div>
 
-                    {% if trans_en_ar %}
-                    <div class="card">
-                      <h5 class="card-header"> Translation II</h5>
-                      <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">en/ar</h6>
-                          <div style="text-align: center;">
-                            {% if trans_en_ar %}
-                              {{ trans_en_ar }}
-                          {% endif %}
-                          </div>
-                        </li>
-                        <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">fr/ar</h6>
-                          <div style="text-align: center;">
-                            {% if trans_fr_ar %}
-                              {{ trans_fr_ar }}
-                          {% endif %}
-                          </div>
-                        </li>
-                        <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">zh/ar</h6>
-                          <div style="text-align: center;">
-                            {{ trans_ch_ar }}
-                          </div>
-                        </li>
-                        <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">ru/ar</h6>
-                          <div style="text-align: center;">
-                            {{ trans_ru_ar }}
-                          </div>
-                        </li>
-                        <li class="list-group-item">
-                          <h6 class="card-subtitle mb-2 text-muted">ua/ar</h6>
-                          <div style="text-align: center;">
-                            {{ trans_ua_ar }}
-                          </div>
-                        </li>
-                    </div>
-                    {% endif %}
-                  <!--************************************************************-->
-                    {% if diac_sent %}
-                    <div class="card">
-                      <h5 class="card-header"> 
-                        Diacritization</h5>
-                      <div class="card-body">
-                        <p class="card-text" style="text-align: center;">{{ diac_sent }}</p>
-                      </div>
-                    </div>
-                    {% endif %}   
-                    
-                    <!--************************************************************-->
-                    {% if out_female_file %}
-                      <div class="card">
-                        <h5 class="card-header">
-                          Text To Speech</h5>
-                        <div class="card-body"> 
-                              <section class="sound-clips" id='output-audio'>
-                                <article class="clip">
-                                  <span class="badge badge-pill badge-primary" style="background-color:blueviolet;">Female</span>
-                                  <audio controls src="static/{{ out_female_file }}">      
-                                  </audio>
-                                </article>
-                  
-                              <article class="clip">
-                                <span class="badge badge-pill badge-primary">Male</span>
-                                <audio controls src="static/{{ out_male_file }}">      
-                                </audio>
-                              </article>
-                              </section>
-                        </div>
-                      </div>
-                    {% endif %}
-                    <!--************************************************************-->
-                    
-                  </div>
+        <div id="error-logs">
+          {% if error_message %}
+          <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+          {% endif %}
 
+        </div>
+
+        <div class="card-group">
+          {% if asr_out %}
+          <div class="card">
+            <h5 class="card-header"> Speech To Text</h5>
+            <div class="card-body">
+              <p class="card-text" style="text-align: center;">{{ asr_out }}</p>
             </div>
+          </div>
+          {% endif %}
+
+          {% if trans_out %}
+          <div class="card">
+            <h5 class="card-header"> Translation </h5>
+            <ul class="list-group list-group-flush">
+              <!--***************************************************************-->
+              <li class="list-group-item">
+                <h6 class="card-subtitle mb-2 text-muted">ar/en</h6>
+                {{ trans_out }}
+              </li>
+              {% endif %}
+              <!--************************************************************-->
+              {% if diac_sent %}
+              <div class="card">
+                <h5 class="card-header">
+                  Diacritization</h5>
+                <div class="card-body">
+                  <p class="card-text" style="text-align: center;">{{ diac_sent }}</p>
+                </div>
+              </div>
+              {% endif %}
+
+              <!--************************************************************-->
+
+              <div class="card">
+                <h5 class="card-header">
+                  Text To Speech</h5>
+                <div class="card-body">
+                  <section class="sound-clips" id='output-audio'>
+                    {% if out_female_file %}
+                    <article class="clip">
+                      <span class="badge badge-pill badge-primary" style="background-color:blueviolet;">Female</span>
+                      <audio controls src="static/{{ out_female_file }}">
+                      </audio>
+                    </article>
+                    {% endif %}
+                    {% if out_female_file %}
+                    <article class="clip">
+                      <span class="badge badge-pill badge-primary">Male</span>
+                      <audio controls src="static/{{ out_male_file }}">
+                      </audio>
+                    </article>
+                  </section>
+                </div>
+              </div>
+              {% endif %}
+              <!--************************************************************-->
+
+          </div>
+
+        </div>
       </div>
 
-      
 
-        
+
+
     </div>
 
     <script src="static/scripts/app.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-  </body>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
+
+</body>
+
 </html>

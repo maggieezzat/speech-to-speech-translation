@@ -1,5 +1,20 @@
 // fork getUserMedia for multiple browser versions, for the future
 // when more browsers support MediaRecorder
+let url = new URL(window.location.href);
+var target = url.searchParams.get("target");
+var lang = url.searchParams.get("lang");
+if (target == 'source language'){
+    var src_lang = lang
+    var dest_lang = 'Arabic'
+}else{
+    var src_lang = 'Arabic'
+    var dest_lang = lang
+}
+// var src_lang = url.searchParams.get("src_lang");
+// var dest_lang = url.searchParams.get("dest_lang");
+console.log(src_lang);
+console.log(dest_lang);
+console.log(target);
 
 navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.webkitGetUserMedia ||
@@ -18,6 +33,7 @@ var soundClips = document.getElementById('input-audio');
 var cards = document.querySelectorAll('.card');
 
 
+
 var clipContainer;
 var divRow;
 var divCol1;
@@ -33,6 +49,7 @@ upload.disabled = true;
 let dpi = window.devicePixelRatio;
 
 // visualiser setup - create web audio api context and canvas
+
 var audioCtx = new (window.AudioContext || webkitAudioContext)();
 audioCtx.resume().then(() => {
  console.log('Playback resumed successfully');
@@ -261,7 +278,7 @@ function uploadCip(uploadText) {
       var blob = this.response;
       console.log(blob)
       var ajaxRequest = new XMLHttpRequest();
-      var uploadUrl = '/upload';
+      var uploadUrl = `/upload?src_lang=${src_lang}&dest_lang=${dest_lang}`;
       console.log(uploadText)
       //if (uploadText == 'Decode'){
       //  uploadUrl = '/upload_asr'
@@ -269,7 +286,6 @@ function uploadCip(uploadText) {
       
       ajaxRequest.open('POST', uploadUrl, true);
       ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
-      
                   ajaxRequest.onreadystatechange = function() {
                         if (ajaxRequest.readyState == 4) {
                             if (ajaxRequest.status === 200) {
