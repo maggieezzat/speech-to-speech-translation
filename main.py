@@ -606,4 +606,4 @@ if __name__ == "__main__":
     #app.secret_key = os.urandom(24)
     app.config.from_object(Config)
     Session(app)
-    app.run()
+    app.run(port=6200)
