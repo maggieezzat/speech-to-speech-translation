@@ -12,10 +12,7 @@ if (target == 'source language'){
 }
 // var src_lang = url.searchParams.get("src_lang");
 // var dest_lang = url.searchParams.get("dest_lang");
-console.log(src_lang);
-console.log(dest_lang);
-console.log(target);
-
+document.getElementById("selected_languages").innerHTML = `${src_lang} -> ${dest_lang}`
 navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.webkitGetUserMedia ||
                        navigator.mozGetUserMedia ||

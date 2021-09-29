@@ -23,6 +23,7 @@ AudioSegment.ffprobe ="/usr/bin/ffprobe"
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
+    
 def complete_tashkeel(sentence):
 
     new_sentence = sentence
@@ -330,6 +331,9 @@ def upload():
                 with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
                     f.write(file_response.content)
                 session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
+            else:
+                session['out_male_file'] = None
+
 
             if "f" in speaker.keys():
                 female_params = '?text='+trans_out+'&speaker='+speaker["f"]+'&language_code='+language+'&sampling_rate=8000'
@@ -337,7 +341,8 @@ def upload():
                 with open(os.path.join(save_dir, output_dir, 'TTS', out_female), 'wb') as f:
                     f.write(file_response.content)
                 session['out_female_file'] = os.path.join( output_dir, 'TTS', out_female)
-
+            else:
+                session['out_female_file'] = None
         end = time.time()
         tts_time = end - start
         print("TTS Time: " + str(tts_time))
@@ -360,7 +365,8 @@ def upload():
     trans_out = session['trans_out'],
     diac_sent = session['diac_sent'],
     out_female_file = session['out_female_file'],
-    out_male_file = session['out_male_file'])
+    out_male_file = session['out_male_file'],
+    )
 
 
 
