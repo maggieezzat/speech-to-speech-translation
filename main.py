@@ -194,7 +194,7 @@ def upload():
             url = 'http://41.179.247.131:6002/'
         else:
             lang_code = get_lang_ASR(src_lang)
-            url = 'http://41.179.247.131:6090?sampling_rate=8000&language_code='+lang_code
+            url = 'http://41.179.247.131:6090?sampling_rate=16000&language_code='+lang_code
         files = {'file': open(os.path.join(save_dir,  output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
@@ -326,7 +326,7 @@ def upload():
             language = get_lang_TTS(dest_lang)
 
             if "m" in speaker.keys():
-                male_params = '?text='+trans_out+'&speaker='+speaker["m"]+'&language_code='+language+'&sampling_rate=8000'
+                male_params = '?text='+trans_out+'&speaker='+speaker["m"]+'&language_code='+language+'&sampling_rate=16000'
                 file_response = rq.post(url+male_params)
                 with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
                     f.write(file_response.content)
@@ -336,7 +336,7 @@ def upload():
 
 
             if "f" in speaker.keys():
-                female_params = '?text='+trans_out+'&speaker='+speaker["f"]+'&language_code='+language+'&sampling_rate=8000'
+                female_params = '?text='+trans_out+'&speaker='+speaker["f"]+'&language_code='+language+'&sampling_rate=16000'
                 file_response = rq.post(url+female_params)
                 with open(os.path.join(save_dir, output_dir, 'TTS', out_female), 'wb') as f:
                     f.write(file_response.content)
