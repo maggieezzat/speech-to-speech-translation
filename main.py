@@ -207,7 +207,7 @@ def upload():
         print("PREP Time: " + str(prep_time))
         
         start = time.time()
-        url = 'http://41.179.247.131:6002/'
+        url = 'http://41.179.247.131:6003/'
         files = {'file': open(os.path.join(save_dir,  output_dir, 'ASR', filename), 'rb')}
 
         r = rq.post(url, files=files)
