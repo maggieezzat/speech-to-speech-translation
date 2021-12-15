@@ -152,6 +152,14 @@
                           </div>
                         </li>
                         <li class="list-group-item">
+                          <h6 class="card-subtitle mb-2 text-muted">en/arz</h6>
+                          <div style="text-align: center;">
+                            {% if trans_en_arz %}
+                              {{ trans_en_arz }}
+                          {% endif %}
+                          </div>
+                        </li>
+                        <li class="list-group-item">
                           <h6 class="card-subtitle mb-2 text-muted">fr/ar</h6>
                           <div style="text-align: center;">
                             {% if trans_fr_ar %}
@@ -189,7 +197,15 @@
                       </div>
                     </div>
                     {% endif %}   
-                    
+                    {% if diac_arz_sent %}
+                    <div class="card">
+                      <h5 class="card-header"> 
+                        Diacritization</h5>
+                      <div class="card-body">
+                        <p class="card-text" style="text-align: center;">{{ diac_arz_sent }}</p>
+                      </div>
+                    </div>
+                    {% endif %} 
                     <!--************************************************************-->
                     {% if out_female_file %}
                       <div class="card">
@@ -206,6 +222,20 @@
                               <article class="clip">
                                 <span class="badge badge-pill badge-primary">Male</span>
                                 <audio controls src="static/{{ out_male_file }}">      
+                                </audio>
+                              </article>
+                              </section>
+
+                              <article class="clip">
+                                <span class="badge badge-pill badge-primary">Male</span>
+                                <audio controls src="static/{{ out_file_n1 }}">      
+                                </audio>
+                              </article>
+                              </section>
+
+                              <article class="clip">
+                                <span class="badge badge-pill badge-primary">Male</span>
+                                <audio controls src="static/{{ out_file_n2 }}">      
                                 </audio>
                               </article>
                               </section>

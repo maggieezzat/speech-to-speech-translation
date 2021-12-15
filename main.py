@@ -82,12 +82,17 @@ def welcome():
                 trans_ua = session['trans_ua'],
                 trans_ch_ar = session['trans_ch_ar'],
                 trans_en_ar = session['trans_en_ar'],
+                # trans_ch_arz = session['trans_ch_arz'],
+                trans_en_arz = session['trans_en_arz'],
                 trans_fr_ar = session['trans_fr_ar'],
                 trans_ru_ar = session['trans_ru_ar'],
                 trans_ua_ar = session['trans_ua_ar'],
                 diac_sent=session['diac_sent'],
+                diac_arz_sent=session['diac_arz_sent'],
                 out_female_file = session['out_female_file'],
-                out_male_file = session['out_male_file'])
+                out_male_file = session['out_male_file'],
+                out_file_n1 = session['out_file_n1'],
+                out_file_n2 = session['out_file_n2'])
         else:
             return render_template('record.html', 
                 in_file = session['in_file'], 
@@ -232,12 +237,16 @@ def upload():
         session.pop('trans_ua', None)
         session.pop('trans_ch_ar', None)
         session.pop('trans_en_ar', None)
+        session.pop('trans_en_arz', None)
         session.pop('trans_fr_ar', None)
         session.pop('trans_ru_ar', None)
         session.pop('trans_ua_ar', None)
         session.pop('diac_sent', None)
+        session.pop('diac_ez_sent', None)
         session.pop('out_female_file', None)
         session.pop('out_male_file', None)
+        session.pop('out_file_n1', None)
+        session.pop('out_file_n2', None)
         session['error_message'] = 'There has been a problem with the ASR output.'
         return render_template("record.html", error_message=session['error_message'])
     
@@ -309,6 +318,15 @@ def upload():
 
             with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ch_arabic.txt'), 'w') as f:
                 f.write(trans_ch_ar + '\n')
+            #CH/AR
+            # url = 'http://41.179.247.131:9704/translate'
+            # payload = {"text": trans_ch, "source":"zh", "target":"arz"}
+            # file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            # trans_ch_arz = file_response.json()['output']
+            # session['trans_ch_arz'] = trans_ch_arz
+
+            # with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ch_arabic_eg.txt'), 'w') as f:
+            #     f.write(trans_ch_arz + '\n')
             
             #EN/AR
             url = 'http://41.179.247.131:9704/translate'
@@ -319,6 +337,15 @@ def upload():
 
             with open(os.path.join(save_dir, output_dir, 'MT', 'trans_en_arabic.txt'), 'w') as f:
                 f.write(trans_en_ar + '\n')
+            #EN/AR
+            url = 'http://41.179.247.131:9704/translate'
+            payload = {"text": trans_en, "source":"en", "target":"arz"}
+            file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
+            trans_en_arz = file_response.json()['output']
+            session['trans_en_arz'] = trans_en_arz
+
+            with open(os.path.join(save_dir, output_dir, 'MT', 'trans_en_arabic_eg.txt'), 'w') as f:
+                f.write(trans_en_arz + '\n')
 
             #FR/AR
             url = 'http://41.179.247.131:9704/translate'
@@ -363,12 +390,16 @@ def upload():
             session.pop('trans_ua', None)
             session.pop('trans_ch_ar', None)
             session.pop('trans_en_ar', None)
+            session.pop('trans_en_arz', None)
             session.pop('trans_fr_ar', None)
             session.pop('trans_ru_ar', None)
             session.pop('trans_ua_ar', None)
             session.pop('diac_sent', None)
+            session.pop('diac_ez_sent', None)
             session.pop('out_female_file', None)
             session.pop('out_male_file', None)
+            session.pop('out_file_n1', None)
+            session.pop('out_file_n2', None)
             session['error_message'] = 'There has been a problem with the translation. Please retry.'
             return render_template("record.html",error_message= session['error_message'])
     else:
@@ -388,6 +419,7 @@ def upload():
         trans_en_ar = re.sub(r'\d+', ' ', trans_en_ar)
         trans_en_ar = re.sub(' +', ' ', trans_en_ar)
         payload = {'text': trans_en_ar}
+
         req = rq.post('https://farasa-api.qcri.org/msa/webapi/diacritizeV2', headers = {'content-type': "application/json"}, json=payload)
         diac_sent = req.json()['output']
         diac_sent = complete_tashkeel(diac_sent)
@@ -413,12 +445,16 @@ def upload():
         session.pop('trans_ua', None)
         session.pop('trans_ch_ar', None)
         session.pop('trans_en_ar', None)
+        session.pop('trans_en_arz', None)
         session.pop('trans_fr_ar', None)
         session.pop('trans_ru_ar', None)
         session.pop('trans_ua_ar', None)
         session.pop('diac_sent', None)
+        session.pop('diac_ez_sent', None)
         session.pop('out_female_file', None)
         session.pop('out_male_file', None)
+        session.pop('out_file_n1', None)
+        session.pop('out_file_n2', None)
         session['error_message'] = 'There has been a problem with the diacritization. Please retry.'
         return render_template("record.html", error_message = session['error_message'] )
 
@@ -446,6 +482,34 @@ def upload():
         
         session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
         
+        url = 'http://41.179.247.131:5000/'
+
+        url_az = 'http://41.179.247.131:6102/tashkeel'
+        payload = {"text": trans_en_arz, "source":" ", "mode":"1"}
+        file_response = rq.post(url_az, headers = {'Content-Type': "application/json"}, json=payload)
+        diac_az_sent = file_response.json()['diacritized_sentence']
+        
+        params = {'txt' : diac_az_sent, 'gender' : '2'}
+        file_response = rq.post(url, params=params)
+
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
+            f.write(file_response.content)
+        
+        session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
+        
+        url = 'http://41.179.247.131:5000/'
+        url_az = 'http://41.179.247.131:6102/tashkeel'
+        payload = {"text": trans_en_ar, "source":" ", "mode":"1"}
+        file_response = rq.post(url_az, headers = {'Content-Type': "application/json"}, json=payload)
+        diac_az_sent = file_response.json()['diacritized_sentence']
+        params = {'txt' : diac_az_sent, 'gender' : '4'}
+        file_response = rq.post(url, params=params)
+
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
+            f.write(file_response.content)
+        
+        session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
+        
         end = time.time()
         tts_time = end - start
         print("TTS Time: " + str(tts_time))
@@ -461,12 +525,16 @@ def upload():
         session.pop('trans_ua', None)
         session.pop('trans_ch_ar', None)
         session.pop('trans_en_ar', None)
+        session.pop('trans_en_arz', None)
         session.pop('trans_fr_ar', None)
         session.pop('trans_ru_ar', None)
         session.pop('trans_ua_ar', None)
         session.pop('diac_sent', None)
+        session.pop('diac_ez_sent', None)
         session.pop('out_female_file', None)
         session.pop('out_male_file', None)
+        session.pop('out_file_n1', None)
+        session.pop('out_file_n2', None)
         session['error_message'] = 'There has been a problem with converting the text to speech. Please retry'
         return render_template("record.html", error_message=session['error_message'])
         
@@ -488,7 +556,9 @@ def upload():
             trans_ua_ar = session['trans_ua_ar'],
             diac_sent=session['diac_sent'],
             out_female_file = session['out_female_file'],
-            out_male_file = session['out_male_file'])
+            out_male_file = session['out_male_file'],
+            out_file_n1 = session['out_file_n1'],
+            out_file_n2 = session['out_file_n2'])
     else:
         return render_template('record.html', 
             in_file = session['in_file'], 
