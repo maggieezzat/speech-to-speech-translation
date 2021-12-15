@@ -469,6 +469,8 @@ def upload():
         file_response = rq.post(url, params=params)
         out_male = 'out_male_{}.wav'.format(str(int(time.time())))
         out_female = 'out_female_{}.wav'.format(str(int(time.time())))
+        out_file_n1 = 'out_male_{}.wav'.format(str(int(time.time())))
+        out_file_n2 = 'out_female_{}.wav'.format(str(int(time.time())))
 
         with open(os.path.join(save_dir, output_dir, 'TTS', out_female), 'wb') as f:
             f.write(file_response.content)
@@ -494,10 +496,10 @@ def upload():
         params = {'txt' : diac_az_sent, 'gender' : '2'}
         file_response = rq.post(url, params=params)
 
-        with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_file_n1), 'wb') as f:
             f.write(file_response.content)
         session['diac_arz_sent'] = diac_az_sent
-        session['out_file_n1'] = os.path.join( output_dir, 'TTS', out_male)
+        session['out_file_n1'] = os.path.join( output_dir, 'TTS', out_file_n1)
         # 
         url = 'http://41.179.247.131:5000/'
         url_az = 'http://41.179.247.131:6102/tashkeel'
@@ -507,10 +509,10 @@ def upload():
         params = {'txt' : diac_az_sent, 'gender' : '4'}
         file_response = rq.post(url, params=params)
 
-        with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_file_n2), 'wb') as f:
             f.write(file_response.content)
         
-        session['out_file_n2'] = os.path.join( output_dir, 'TTS', out_male)
+        session['out_file_n2'] = os.path.join( output_dir, 'TTS', out_file_n2)
         
         end = time.time()
         tts_time = end - start
