@@ -466,8 +466,8 @@ def upload():
         
         out_male = 'out_male_{}.wav'.format(str(int(time.time())))
         out_female = 'out_female_{}.wav'.format(str(int(time.time())))
-        out_file_n1 = 'out_male_{}.wav'.format(str(int(time.time())))
-        out_file_n2 = 'out_female_{}.wav'.format(str(int(time.time())))
+        out_file_n1 = 'out_file_n1_{}.wav'.format(str(int(time.time())))
+        out_file_n2 = 'out_file_n2_{}.wav'.format(str(int(time.time())))
         #
         url = 'http://41.179.247.131:5000/'
         diac_sent = 'ي ' + diac_sent
