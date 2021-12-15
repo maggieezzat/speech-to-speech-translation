@@ -99,7 +99,9 @@ def welcome():
                 asr_out = session['asr_out'],
                 diac_sent=session['diac_sent'],
                 out_female_file = session['out_female_file'],
-                out_male_file = session['out_male_file'])
+                out_male_file = session['out_male_file'],
+                out_file_n1 = session['out_file_n1'],
+                out_file_n2 = session['out_file_n2'])
 
     
     elif 'error_message' in session.keys():
@@ -472,7 +474,7 @@ def upload():
             f.write(file_response.content)
         
         session['out_female_file'] = os.path.join( output_dir, 'TTS', out_female)
-
+        # 
         url = 'http://41.179.247.131:5000/'
         params = {'txt' : diac_sent, 'gender' : '1'}
         file_response = rq.post(url, params=params)
@@ -481,7 +483,7 @@ def upload():
             f.write(file_response.content)
         
         session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
-        
+        # 
         url = 'http://41.179.247.131:5000/'
 
         url_az = 'http://41.179.247.131:6102/tashkeel'
@@ -494,9 +496,9 @@ def upload():
 
         with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
             f.write(file_response.content)
-        
-        session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
-        
+        session['diac_arz_sent'] = diac_az_sent
+        session['out_file_n1'] = os.path.join( output_dir, 'TTS', out_male)
+        # 
         url = 'http://41.179.247.131:5000/'
         url_az = 'http://41.179.247.131:6102/tashkeel'
         payload = {"text": trans_en_ar, "source":" ", "mode":"1"}
@@ -508,7 +510,7 @@ def upload():
         with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
             f.write(file_response.content)
         
-        session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
+        session['out_file_n2'] = os.path.join( output_dir, 'TTS', out_male)
         
         end = time.time()
         tts_time = end - start
