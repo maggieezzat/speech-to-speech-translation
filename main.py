@@ -463,18 +463,18 @@ def upload():
     ###################################### 5. TEXT TO SPEECH ######################################
     try:
         start = time.time()
-        url = 'http://41.179.247.131:5000/'
-        diac_sent = 'ي ' + diac_sent
-        params = {'txt' : diac_sent, 'gender' : '0'}
-        file_response = rq.post(url, params=params)
+        
         out_male = 'out_male_{}.wav'.format(str(int(time.time())))
         out_female = 'out_female_{}.wav'.format(str(int(time.time())))
         out_file_n1 = 'out_male_{}.wav'.format(str(int(time.time())))
         out_file_n2 = 'out_female_{}.wav'.format(str(int(time.time())))
-
+        #
+        url = 'http://41.179.247.131:5000/'
+        diac_sent = 'ي ' + diac_sent
+        params = {'txt' : diac_sent, 'gender' : '0'}
+        file_response = rq.post(url, params=params)
         with open(os.path.join(save_dir, output_dir, 'TTS', out_female), 'wb') as f:
             f.write(file_response.content)
-        
         session['out_female_file'] = os.path.join( output_dir, 'TTS', out_female)
         # 
         url = 'http://41.179.247.131:5000/'
@@ -486,26 +486,22 @@ def upload():
         
         session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
         # 
-        url = 'http://41.179.247.131:5000/'
-
         url_az = 'http://41.179.247.131:6102/tashkeel'
         payload = {"text": trans_en_arz, "source":" ", "mode":"1"}
         file_response = rq.post(url_az, headers = {'Content-Type': "application/json"}, json=payload)
         diac_az_sent = file_response.json()['diacritized_sentence']
-        
+        session['diac_arz_sent'] = diac_az_sent
+        #
+
+        url = 'http://41.179.247.131:5000/'
         params = {'txt' : diac_az_sent, 'gender' : '2'}
         file_response = rq.post(url, params=params)
 
         with open(os.path.join(save_dir, output_dir, 'TTS', out_file_n1), 'wb') as f:
             f.write(file_response.content)
-        session['diac_arz_sent'] = diac_az_sent
         session['out_file_n1'] = os.path.join( output_dir, 'TTS', out_file_n1)
         # 
         url = 'http://41.179.247.131:5000/'
-        url_az = 'http://41.179.247.131:6102/tashkeel'
-        payload = {"text": trans_en_ar, "source":" ", "mode":"1"}
-        file_response = rq.post(url_az, headers = {'Content-Type': "application/json"}, json=payload)
-        diac_az_sent = file_response.json()['diacritized_sentence']
         params = {'txt' : diac_az_sent, 'gender' : '4'}
         file_response = rq.post(url, params=params)
 
