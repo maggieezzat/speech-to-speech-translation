@@ -28,37 +28,7 @@
                     {% if in_file %}
                     <article class="clip">
                       <audio id="audio-panel" controls src="static/{{ in_file }}">      
-                      </audio>
-
-
-                          <!-- <div class="row" id="audio-trans" style="width: 100%">
-                                <div class="col-sm-8" style="text-align: center;" id="audio-col">
-                                    <audio id="audio-panel" controls src="static/{{ in_file }}">      
-                                    </audio>
-                                </div>
-                                <div class="col-sm-3" id="toggle-col" style="display: inline-block; padding-top: 1rem; ">
-                                      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        {% if trans_ar %}
-                                        <label id="trans-on-label" class="btn btn-secondary" style="width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem; background:rgb(0, 150, 0)">
-                                          <input type="radio" name="options" id="trans-on" autocomplete="off"> Translate On
-                                        </label>
-                                        <label id="trans-off-label" class="btn btn-secondary" style="width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem; background: #888888;">
-                                          <input type="radio" name="options" id="trans-off" autocomplete="off"> Translate Off
-                                        </label>
-                                        {% else %}
-                                        <label id="trans-on-label" class="btn btn-secondary" style="width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem; background: #888888;">
-                                          <input type="radio" name="options" id="trans-on" autocomplete="off"> Translate On
-                                        </label>
-                                        <label id="trans-off-label" class="btn btn-secondary" style="width: 7.8rem;height: 3rem; text-align: center; padding-top:0.8rem; background: rgb(199, 0,0)">
-                                          <input type="radio" name="options" id="trans-off" autocomplete="off"> Translate Off
-                                        </label>
-                                        {% endif %}
-
-                                        
-                                      </div>
-                                </div>
-                            </div> -->
-                          
+                      </audio>      
                     </article>
                     
                     {% endif %}
@@ -207,35 +177,20 @@
                     </div>
                     {% endif %} 
                     <!--************************************************************-->
-                    {% if out_female_file %}
+                    {% if out_female_file_MSA%}
                       <div class="card">
                         <h5 class="card-header">
                           Text To Speech</h5>
                         <div class="card-body"> 
                               <section class="sound-clips" id='output-audio'>
                                 <article class="clip">
-                                  <span class="badge badge-pill badge-primary" style="background-color:blueviolet;">Female</span>
-                                  <audio controls src="static/{{ out_female_file }}">      
+                                  <span class="badge badge-pill badge-primary" style="background-color:blueviolet;">Female MSA</span>
+                                  <audio controls src="static/{{ out_female_file_MSA}}">      
                                   </audio>
                                 </article>
-                  
                               <article class="clip">
-                                <span class="badge badge-pill badge-primary">Male</span>
-                                <audio controls src="static/{{ out_male_file }}">      
-                                </audio>
-                              </article>
-                              </section>
-
-                              <article class="clip">
-                                <span class="badge badge-pill badge-primary">arabic_az</span>
-                                <audio controls src="static/{{ out_file_n1 }}">      
-                                </audio>
-                              </article>
-                              </section>
-
-                              <article class="clip">
-                                <span class="badge badge-pill badge-primary">arabic_az_2</span>
-                                <audio controls src="static/{{ out_file_n2 }}">      
+                                <span class="badge badge-pill badge-primary">Female ECA </span>
+                                <audio controls src="static/{{ out_female_file_ECA }}">      
                                 </audio>
                               </article>
                               </section>
