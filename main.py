@@ -89,19 +89,15 @@ def welcome():
                 trans_ua_ar = session['trans_ua_ar'],
                 diac_sent=session['diac_sent'],
                 diac_arz_sent=session['diac_arz_sent'],
-                out_female_file = session['out_female_file'],
-                out_male_file = session['out_male_file'],
-                out_file_n1 = session['out_file_n1'],
-                out_file_n2 = session['out_file_n2'])
+                out_female_file_MSA= session['out_female_file_MSA'],         
+                out_female_file_ECA = session['out_female_file_ECA'])
         else:
             return render_template('record.html', 
                 in_file = session['in_file'], 
                 asr_out = session['asr_out'],
                 diac_sent=session['diac_sent'],
-                out_female_file = session['out_female_file'],
-                out_male_file = session['out_male_file'],
-                out_file_n1 = session['out_file_n1'],
-                out_file_n2 = session['out_file_n2'])
+                out_female_file_MSA= session['out_female_file_MSA'],
+                out_female_file_ECA = session['out_female_file_ECA'])
 
     
     elif 'error_message' in session.keys():
@@ -245,10 +241,8 @@ def upload():
         session.pop('trans_ua_ar', None)
         session.pop('diac_sent', None)
         session.pop('diac_ez_sent', None)
-        session.pop('out_female_file', None)
-        session.pop('out_male_file', None)
-        session.pop('out_file_n1', None)
-        session.pop('out_file_n2', None)
+        session.pop('out_female_file_MSA', None)
+        session.pop('out_female_file_ECA', None)
         session['error_message'] = 'There has been a problem with the ASR output.'
         return render_template("record.html", error_message=session['error_message'])
     
@@ -320,15 +314,7 @@ def upload():
 
             with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ch_arabic.txt'), 'w') as f:
                 f.write(trans_ch_ar + '\n')
-            #CH/AR
-            # url = 'http://41.179.247.131:9704/translate'
-            # payload = {"text": trans_ch, "source":"zh", "target":"arz"}
-            # file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
-            # trans_ch_arz = file_response.json()['output']
-            # session['trans_ch_arz'] = trans_ch_arz
-
-            # with open(os.path.join(save_dir, output_dir, 'MT', 'trans_ch_arabic_eg.txt'), 'w') as f:
-            #     f.write(trans_ch_arz + '\n')
+           
             
             #EN/AR
             url = 'http://41.179.247.131:9704/translate'
@@ -398,10 +384,8 @@ def upload():
             session.pop('trans_ua_ar', None)
             session.pop('diac_sent', None)
             session.pop('diac_ez_sent', None)
-            session.pop('out_female_file', None)
-            session.pop('out_male_file', None)
-            session.pop('out_file_n1', None)
-            session.pop('out_file_n2', None)
+            session.pop('out_female_file_MSA', None)
+            session.pop('out_female_file_ECA', None)
             session['error_message'] = 'There has been a problem with the translation. Please retry.'
             return render_template("record.html",error_message= session['error_message'])
     else:
@@ -453,10 +437,8 @@ def upload():
         session.pop('trans_ua_ar', None)
         session.pop('diac_sent', None)
         session.pop('diac_ez_sent', None)
-        session.pop('out_female_file', None)
-        session.pop('out_male_file', None)
-        session.pop('out_file_n1', None)
-        session.pop('out_file_n2', None)
+        session.pop('out_female_file_MSA', None)
+        session.pop('out_female_file_ECA', None)
         session['error_message'] = 'There has been a problem with the diacritization. Please retry.'
         return render_template("record.html", error_message = session['error_message'] )
 
@@ -464,28 +446,17 @@ def upload():
     try:
         start = time.time()
         
-        out_male = 'out_male_{}.wav'.format(str(int(time.time())))
-        out_female = 'out_female_{}.wav'.format(str(int(time.time())))
-        out_file_n1 = 'out_file_n1_{}.wav'.format(str(int(time.time())))
-        out_file_n2 = 'out_file_n2_{}.wav'.format(str(int(time.time())))
+        out_female_file_MSA = 'out_female_file_MSA_{}.wav'.format(str(int(time.time())))
+        out_female_file_ECA = 'out_female_file_ECA_{}.wav'.format(str(int(time.time())))
         #
         url = 'http://41.179.247.131:5000/'
         diac_sent = 'ي ' + diac_sent
         params = {'txt' : diac_sent, 'gender' : '0'}
         file_response = rq.post(url, params=params)
-        with open(os.path.join(save_dir, output_dir, 'TTS', out_female), 'wb') as f:
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_female_file_MSA), 'wb') as f:
             f.write(file_response.content)
-        session['out_female_file'] = os.path.join( output_dir, 'TTS', out_female)
-        # 
-        url = 'http://41.179.247.131:5000/'
-        params = {'txt' : diac_sent, 'gender' : '1'}
-        file_response = rq.post(url, params=params)
-
-        with open(os.path.join(save_dir, output_dir, 'TTS', out_male), 'wb') as f:
-            f.write(file_response.content)
-        
-        session['out_male_file'] = os.path.join( output_dir, 'TTS', out_male)
-        # 
+        session['out_female_file_MSA'] = os.path.join( output_dir, 'TTS', out_female_file_MSA)
+       #
         url_az = 'http://41.179.247.131:6102/tashkeel'
         payload = {"text": trans_en_arz, "source":" ", "mode":"1"}
         file_response = rq.post(url_az, headers = {'Content-Type': "application/json"}, json=payload)
@@ -497,18 +468,10 @@ def upload():
         params = {'txt' : diac_az_sent, 'gender' : '2'}
         file_response = rq.post(url, params=params)
 
-        with open(os.path.join(save_dir, output_dir, 'TTS', out_file_n1), 'wb') as f:
+        with open(os.path.join(save_dir, output_dir, 'TTS', out_female_file_ECA), 'wb') as f:
             f.write(file_response.content)
-        session['out_file_n1'] = os.path.join( output_dir, 'TTS', out_file_n1)
-        # 
-        url = 'http://41.179.247.131:5000/'
-        params = {'txt' : diac_az_sent, 'gender' : '4'}
-        file_response = rq.post(url, params=params)
-
-        with open(os.path.join(save_dir, output_dir, 'TTS', out_file_n2), 'wb') as f:
-            f.write(file_response.content)
+        session['out_female_file_ECA'] = os.path.join( output_dir, 'TTS', out_female_file_ECA)
         
-        session['out_file_n2'] = os.path.join( output_dir, 'TTS', out_file_n2)
         
         end = time.time()
         tts_time = end - start
@@ -531,10 +494,8 @@ def upload():
         session.pop('trans_ua_ar', None)
         session.pop('diac_sent', None)
         session.pop('diac_ez_sent', None)
-        session.pop('out_female_file', None)
-        session.pop('out_male_file', None)
-        session.pop('out_file_n1', None)
-        session.pop('out_file_n2', None)
+        session.pop('out_female_file_MSA', None)
+        session.pop('out_female_file_ECA', None)
         session['error_message'] = 'There has been a problem with converting the text to speech. Please retry'
         return render_template("record.html", error_message=session['error_message'])
         
@@ -555,17 +516,15 @@ def upload():
             trans_ru_ar = session['trans_ru_ar'],
             trans_ua_ar = session['trans_ua_ar'],
             diac_sent=session['diac_sent'],
-            out_female_file = session['out_female_file'],
-            out_male_file = session['out_male_file'],
-            out_file_n1 = session['out_file_n1'],
-            out_file_n2 = session['out_file_n2'])
+            out_female_file_MSA= session['out_female_file_MSA'],
+            out_female_file_ECA = session['out_female_file_ECA'])
     else:
         return render_template('record.html', 
             in_file = session['in_file'], 
             asr_out = session['asr_out'],
             diac_sent = session['diac_sent'],
-            out_female_file = session['out_female_file'],
-            out_male_file = session['out_male_file'])
+            out_female_file_MSA = session['out_female_file_MSA'],
+            out_female_file_ECA = session['out_female_file_ECA'])
 
 
 
