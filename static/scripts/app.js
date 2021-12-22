@@ -261,7 +261,8 @@ function uploadCip(uploadText) {
       var blob = this.response;
       console.log(blob)
       var ajaxRequest = new XMLHttpRequest();
-      var uploadUrl = '/upload';
+      // var uploadUrl = '/upload';
+      var uploadUrl = '/run_asr'
       console.log(uploadText)
       //if (uploadText == 'Decode'){
       //  uploadUrl = '/upload_asr'
@@ -273,7 +274,9 @@ function uploadCip(uploadText) {
                   ajaxRequest.onreadystatechange = function() {
                         if (ajaxRequest.readyState == 4) {
                             if (ajaxRequest.status === 200) {
-                                    allDone();
+                              document.getElementById("fix out").innerHTML = ajaxRequest.response;
+
+                              asrDone();
                             } 
                             else {
                               alert('Uploading failed with error code ' + ajaxRequest.status);
@@ -286,7 +289,251 @@ function uploadCip(uploadText) {
   xhr.send();
 }
 
+function asrDone() {
 
+  //document.cookie = 'all_done=true; path=/';
+
+  console.log("ASR DONE");
+
+  // location.reload(false);
+  // Window.location.reload();
+  uploadTranslateOne();
+}
+
+function uploadTranslateOne(){
+  console.log("translating ..")
+
+  // var xhr = new XMLHttpRequest();
+  // // console.log(audioBlobUrl)
+  // xhr.open('GET', audioBlobUrl, true);
+  // // xhr.responseType = 'blob';
+  // xhr.onload = function(e) {
+    // if (this.status == 200) {
+    //   var blob = this.response;
+    //   console.log(blob)
+      var ajaxRequest = new XMLHttpRequest();
+      // var uploadUrl = '/upload';
+      var uploadUrl = '/run_translate_one'
+      
+      //if (uploadText == 'Decode'){
+      //  uploadUrl = '/upload_asr'
+      //}
+      
+      ajaxRequest.open('POST', uploadUrl, true);
+      ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
+      
+      ajaxRequest.onreadystatechange = function() {
+            if (ajaxRequest.readyState == 4) {
+                if (ajaxRequest.status === 200) {
+                    document.getElementById("fix out").innerHTML = ajaxRequest.response;
+                    translateOneDone();
+                } 
+                else {
+                  alert('Uploading failed with error code ' + ajaxRequest.status);
+                }
+            }
+      };
+      ajaxRequest.send();
+    };
+//   };
+//   xhr.send();
+// }
+
+function translateOneDone() {
+
+  console.log("translation done");
+
+  //document.cookie = 'all_done=true; path=/';
+
+  // location.reload(false);
+  // Window.location.reload();
+  uploadTranslateTwo();
+}
+
+
+function uploadTranslateTwo(){
+  console.log("translating ..")
+
+  // var xhr = new XMLHttpRequest();
+  // // console.log(audioBlobUrl)
+  // xhr.open('GET', audioBlobUrl, true);
+  // // xhr.responseType = 'blob';
+  // xhr.onload = function(e) {
+    // if (this.status == 200) {
+    //   var blob = this.response;
+    //   console.log(blob)
+      var ajaxRequest = new XMLHttpRequest();
+      // var uploadUrl = '/upload';
+      var uploadUrl = '/run_translate_two'
+      
+      //if (uploadText == 'Decode'){
+      //  uploadUrl = '/upload_asr'
+      //}
+      
+      ajaxRequest.open('POST', uploadUrl, true);
+      ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
+      
+      ajaxRequest.onreadystatechange = function() {
+            if (ajaxRequest.readyState == 4) {
+                if (ajaxRequest.status === 200) {
+                    document.getElementById("fix out").innerHTML = ajaxRequest.response;
+                    translateTwoDone();
+                } 
+                else {
+                  alert('Uploading failed with error code ' + ajaxRequest.status);
+                }
+            }
+      };
+      ajaxRequest.send();
+    };
+//   };
+//   xhr.send();
+// }
+
+function translateTwoDone() {
+
+  console.log("translation done");
+
+  //document.cookie = 'all_done=true; path=/';
+
+  // location.reload(false);
+  // Window.location.reload();
+  uploadDiacritizationOne();
+}
+
+function uploadDiacritizationOne(){
+
+  // var xhr = new XMLHttpRequest();
+  // // console.log(audioBlobUrl)
+  // // xhr.open('GET', audioBlobUrl, true);
+  // // xhr.responseType = 'blob';
+  // xhr.onload = function(e) {
+  //   if (this.status == 200) {
+  //     var blob = this.response;
+  //     console.log(blob)
+      var ajaxRequest = new XMLHttpRequest();
+      // var uploadUrl = '/upload';
+      var uploadUrl = '/run_diac_one'
+      // console.log(uploadText)
+      //if (uploadText == 'Decode'){
+      //  uploadUrl = '/upload_asr'
+      //}
+      
+      ajaxRequest.open('POST', uploadUrl, true);
+      ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
+      
+                  ajaxRequest.onreadystatechange = function() {
+                        if (ajaxRequest.readyState == 4) {
+                            if (ajaxRequest.status === 200) {
+                              document.getElementById("fix out").innerHTML = ajaxRequest.response;
+                              diacOneDone();
+                            } 
+                            else {
+                              alert('Uploading failed with error code ' + ajaxRequest.status);
+                            }
+                        }
+                  };
+      ajaxRequest.send();
+    };
+  // };
+//   xhr.send();
+// }
+
+function diacOneDone() {
+
+  //document.cookie = 'all_done=true; path=/';
+
+  // location.reload(false);
+  // Window.location.reload();
+  console.log("diac done");
+  uploadDiacritizationTwo();
+}
+
+function uploadDiacritizationTwo(){
+
+  // var xhr = new XMLHttpRequest();
+  // // console.log(audioBlobUrl)
+  // // xhr.open('GET', audioBlobUrl, true);
+  // // xhr.responseType = 'blob';
+  // xhr.onload = function(e) {
+  //   if (this.status == 200) {
+  //     var blob = this.response;
+  //     console.log(blob)
+      var ajaxRequest = new XMLHttpRequest();
+      // var uploadUrl = '/upload';
+      var uploadUrl = '/run_diac_two'
+      // console.log(uploadText)
+      //if (uploadText == 'Decode'){
+      //  uploadUrl = '/upload_asr'
+      //}
+      
+      ajaxRequest.open('POST', uploadUrl, true);
+      ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
+      
+                  ajaxRequest.onreadystatechange = function() {
+                        if (ajaxRequest.readyState == 4) {
+                            if (ajaxRequest.status === 200) {
+                              document.getElementById("fix out").innerHTML = ajaxRequest.response;
+                              diacTwoDone();
+                            } 
+                            else {
+                              alert('Uploading failed with error code ' + ajaxRequest.status);
+                            }
+                        }
+                  };
+      ajaxRequest.send();
+    };
+  // };
+//   xhr.send();
+// }
+
+function diacTwoDone() {
+
+  //document.cookie = 'all_done=true; path=/';
+
+  // location.reload(false);
+  // Window.location.reload();
+  console.log("diac done");
+  uploadTTS();
+}
+
+function uploadTTS(){
+
+  // var xhr = new XMLHttpRequest();
+  // // console.log(audioBlobUrl)
+  // // xhr.open('GET', audioBlobUrl, true);
+  // // xhr.responseType = 'blob';
+  // xhr.onload = function(e) {
+  //   if (this.status == 200) {
+  //     var blob = this.response;
+  //     console.log(blob)
+      var ajaxRequest = new XMLHttpRequest();
+      // var uploadUrl = '/upload';
+      var uploadUrl = '/run_tts'
+      // console.log(uploadText)
+      //if (uploadText == 'Decode'){
+      //  uploadUrl = '/upload_asr'
+      //}
+      
+      ajaxRequest.open('POST', uploadUrl, true);
+      ajaxRequest.setRequestHeader('Content-Type', 'application/json');    
+      
+                  ajaxRequest.onreadystatechange = function() {
+                        if (ajaxRequest.readyState == 4) {
+                            if (ajaxRequest.status === 200) {
+                              // document.getElementById("fix out").innerHTML = ajaxRequest.response;
+                              allDone();
+                            } 
+                            else {
+                              alert('Uploading failed with error code ' + ajaxRequest.status);
+                            }
+                        }
+                  };
+      ajaxRequest.send();
+    };
+//   };
+//   xhr.send();
+// }
 
 function allDone() {
 
