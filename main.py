@@ -754,7 +754,7 @@ def call_diac_two():
     try:
         start = time.time()
   
-        url_az = 'http://41.179.247.131:6102/tashkeel'
+        url_az = 'http://41.179.247.131:5557/tashkeel'
         payload = {"text": trans_en_arz, "source":" ", "mode":"1"}
         file_response = rq.post(url_az, headers = {'Content-Type': "application/json"}, json=payload)
         diac_az_sent = file_response.json()['diacritized_sentence']
