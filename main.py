@@ -392,7 +392,7 @@ def call_translate_one():
         os.makedirs(os.path.join(save_dir, output_dir, 'MT'))
 
         #CHINESE
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"zh"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_ch = file_response.json()['output']
@@ -404,7 +404,7 @@ def call_translate_one():
         
         
         #ENGLISH
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"en"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_en = file_response.json()['output']
@@ -415,7 +415,7 @@ def call_translate_one():
             f.write(trans_en + '\n')
         
         #FRENCH
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"fr"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_fr = file_response.json()['output']
@@ -427,7 +427,7 @@ def call_translate_one():
         
 
         #RUSSIAN
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"ru"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_ru = file_response.json()['output']
@@ -439,7 +439,7 @@ def call_translate_one():
 
 
         #UKRANIAN
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"uk"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_ua = file_response.json()['output']
@@ -525,7 +525,7 @@ def call_translate_two():
     try:
         ###################################### 3. ARABIC TRANSLATION ######################################
         #CH/AR
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": trans_ch, "source":"zh", "target":"ar"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_ch_ar = file_response.json()['output']
@@ -537,7 +537,7 @@ def call_translate_two():
         
         
         #EN/AR
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": trans_en, "source":"en", "target":"ar"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_en_ar = file_response.json()['output']
@@ -547,7 +547,7 @@ def call_translate_two():
         with open(os.path.join(save_dir, output_dir, 'MT', 'trans_en_arabic.txt'), 'w', encoding="utf-8") as f:
             f.write(trans_en_ar + '\n')
         #EN/AR
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": trans_en, "source":"en", "target":"arz"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_en_arz = file_response.json()['output']
@@ -558,7 +558,7 @@ def call_translate_two():
             f.write(trans_en_arz + '\n')
 
         #FR/AR
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": trans_fr, "source":"fr", "target":"ar"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_fr_ar = file_response.json()['output']
@@ -570,7 +570,7 @@ def call_translate_two():
         
 
         #RU/AR
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": trans_ru, "source":"ru", "target":"ar"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_ru_ar = file_response.json()['output']
@@ -581,7 +581,7 @@ def call_translate_two():
             f.write(trans_ru_ar + '\n')
 
         #UA/AR
-        url = 'http://41.179.247.131:9704/translate'
+        url = 'http://41.179.247.131:8998/translate'
         payload = {"text": trans_ua, "source":"uk", "target":"ar"}
         file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
         trans_ua_ar = file_response.json()['output']
@@ -1035,7 +1035,7 @@ def upload():
             os.makedirs(os.path.join(save_dir, output_dir, 'MT'))
 
             #CHINESE
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"zh"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ch = file_response.json()['output']
@@ -1046,7 +1046,7 @@ def upload():
             
             
             #ENGLISH
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"en"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_en = file_response.json()['output']
@@ -1056,7 +1056,7 @@ def upload():
                 f.write(trans_en + '\n')
             
             #FRENCH
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"fr"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_fr = file_response.json()['output']
@@ -1067,7 +1067,7 @@ def upload():
             
 
             #RUSSIAN
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"ru"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ru = file_response.json()['output']
@@ -1078,7 +1078,7 @@ def upload():
 
 
             #UKRANIAN
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": asr_out.replace('<صخث>', ''), "source":"ar", "target":"uk"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ua = file_response.json()['output']
@@ -1089,7 +1089,7 @@ def upload():
 
             ###################################### 3. ARABIC TRANSLATION ######################################
             #CH/AR
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": trans_ch, "source":"zh", "target":"ar"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ch_ar = file_response.json()['output']
@@ -1100,7 +1100,7 @@ def upload():
            
             
             #EN/AR
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": trans_en, "source":"en", "target":"ar"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_en_ar = file_response.json()['output']
@@ -1109,7 +1109,7 @@ def upload():
             with open(os.path.join(save_dir, output_dir, 'MT', 'trans_en_arabic.txt'), 'w') as f:
                 f.write(trans_en_ar + '\n')
             #EN/AR
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": trans_en, "source":"en", "target":"arz"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_en_arz = file_response.json()['output']
@@ -1119,7 +1119,7 @@ def upload():
                 f.write(trans_en_arz + '\n')
 
             #FR/AR
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": trans_fr, "source":"fr", "target":"ar"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_fr_ar = file_response.json()['output']
@@ -1130,7 +1130,7 @@ def upload():
             
 
             #RU/AR
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": trans_ru, "source":"ru", "target":"ar"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ru_ar = file_response.json()['output']
@@ -1140,7 +1140,7 @@ def upload():
                 f.write(trans_ru_ar + '\n')
 
             #UA/AR
-            url = 'http://41.179.247.131:9704/translate'
+            url = 'http://41.179.247.131:8998/translate'
             payload = {"text": trans_ua, "source":"uk", "target":"ar"}
             file_response = rq.post(url, headers = {'Content-Type': "application/json"}, json=payload)
             trans_ua_ar = file_response.json()['output']
